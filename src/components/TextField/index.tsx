@@ -1,36 +1,37 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   TextInput,
   TextInputProps,
   View,
-  ViewStyle
-} from "react-native";
-import { colors, screenwidth } from "../../constants";
-import { normalizeX, normalizeY } from "../../utils/normalize";
-import Typography from "../Typography";
+  ViewStyle,
+} from 'react-native';
+import {screenwidth} from '../../constants';
+import colors from '../../constants/colors';
+import {normalizeX, normalizeY} from '../../utils/normalize';
+import Typography from '../Typography';
 
 const styles = StyleSheet.create({
   container: {
     width: screenwidth - normalizeX(48),
-    marginBottom: normalizeY(20)
+    marginBottom: normalizeY(16),
   },
   textInputContainer: {
-    width: "100%",
-    height: normalizeY(55),
-    borderRadius: normalizeY(12),
-    backgroundColor: colors.accent,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: normalizeX(16)
+    width: '100%',
+    height: normalizeY(60),
+    borderRadius: normalizeY(60 / 2),
+    backgroundColor: 'rgba(249, 139, 57, 0.15)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: normalizeX(16),
   },
   textInput: {
     flex: 1,
-    height: "90%",
+    height: '90%',
     marginRight: normalizeX(16),
     color: colors.black,
-    fontSize: normalizeY(14)
-  }
+    fontSize: normalizeY(14),
+  },
 });
 
 interface Props {
@@ -43,18 +44,21 @@ interface Props {
 
 const TextField = (props: Props) => {
   return (
-    <View style={{ ...styles.container, ...props.containerStyle }}>
+    <View style={{...styles.container, ...props.containerStyle}}>
       <View style={styles.textInputContainer}>
         {props.leftIcon}
-        <TextInput style={styles.textInput} {...props.textInputProps} />
+        <TextInput
+          style={styles.textInput}
+          placeholderTextColor={colors.darkgrey}
+          {...props.textInputProps}
+        />
         {props.rightIcon}
       </View>
       {props?.error && props.error.length > 0 && (
         <Typography
           variant="sm"
           color={colors.error}
-          style={{ marginLeft: normalizeX(4), marginTop: normalizeY(4) }}
-        >
+          style={{marginLeft: normalizeX(4), marginTop: normalizeY(4)}}>
           {props.error}
         </Typography>
       )}

@@ -1,24 +1,25 @@
-import React from "react";
+import React from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
-} from "react-native";
-import { colors, screenwidth } from "../../constants";
-import { normalizeX, normalizeY } from "../../utils/normalize";
-import Typography from "../Typography";
+  View,
+} from 'react-native';
+import {screenwidth} from '../../constants';
+import colors from '../../constants/colors';
+import {normalizeX, normalizeY} from '../../utils/normalize';
+import Typography from '../Typography';
 
 const styles = StyleSheet.create({
   container: {
     width: screenwidth - normalizeX(48),
-    height: normalizeY(55),
-    borderRadius: normalizeY(12),
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center"
-  }
+    height: normalizeY(60),
+    borderRadius: normalizeY(60 / 2),
+    backgroundColor: colors.deepgrey,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 interface Props {
@@ -37,15 +38,14 @@ const Button = (props: Props) => {
         ...styles.container,
         backgroundColor:
           props.isDisabled || props.isLoading
-            ? "rgba(52, 97, 253, 0.5)"
-            : colors.primary
+            ? 'rgba(41, 37, 37, 0.5)'
+            : colors.deepgrey,
       }}
-      disabled={props.isDisabled}
-    >
+      disabled={props.isDisabled}>
       {props.isLoading ? (
         <ActivityIndicator size="small" color={colors.white} />
       ) : (
-        <Typography variant="sm" color="white" style={{ fontWeight: "600" }}>
+        <Typography variant="sm" color="white" style={{fontWeight: '600'}}>
           {props.label}
         </Typography>
       )}

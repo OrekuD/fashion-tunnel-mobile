@@ -1,6 +1,6 @@
-import React from "react";
-import { ViewStyle } from "react-native";
-import Svg, { Circle, Path } from "react-native-svg";
+import React from 'react';
+import {ViewStyle} from 'react-native';
+import Svg, {Circle, Path} from 'react-native-svg';
 
 export interface BaseSvgProps {
   height: number;
@@ -20,8 +20,7 @@ export const EyeIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -42,8 +41,7 @@ export const EyeCancelIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -59,8 +57,7 @@ export const MailIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -76,8 +73,7 @@ export const CancelCircleIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -93,8 +89,7 @@ export const UserIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -110,8 +105,7 @@ export const SettingsIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -132,12 +126,26 @@ export const ArrowLeftIcon = (props: SvgProps) => (
     fill="none"
     viewBox="0 0 24 24"
     stroke={props.color}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
       d="M11 17l-5-5m0 0l5-5m-5 5h12"
+    />
+  </Svg>
+);
+
+export const ArrowRightIcon = (props: SvgProps) => (
+  <Svg
+    width={props.width}
+    height={props.height}
+    viewBox="0 0 20 20"
+    fill={props.color}
+    strokeWidth={props.strokeWidth || 2}>
+    <Path
+      fillRule="evenodd"
+      d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+      clipRule="evenodd"
     />
   </Svg>
 );
@@ -149,8 +157,7 @@ export const LogoutIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -166,8 +173,7 @@ export const UserCircleIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -181,8 +187,7 @@ export const UserFilledIcon = (props: SvgProps) => (
     viewBox="0 0 20 20"
     width={props.width}
     height={props.height}
-    fill={props.color}
-  >
+    fill={props.color}>
     <Path
       fillRule="evenodd"
       d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
@@ -198,8 +203,7 @@ export const DashboardIcon = (props: SvgProps) => (
     stroke={props.color}
     width={props.width}
     height={props.height}
-    strokeWidth={props.strokeWidth || 2}
-  >
+    strokeWidth={props.strokeWidth || 2}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -213,8 +217,7 @@ export const DashboardFilledIcon = (props: SvgProps) => (
     viewBox="0 0 20 20"
     width={props.width}
     height={props.height}
-    fill={props.color}
-  >
+    fill={props.color}>
     <Path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
   </Svg>
 );
@@ -226,8 +229,7 @@ export const PastIcon = (props: SvgProps) => (
     strokeWidth={2}
     width={props.width}
     height={props.height}
-    stroke={props.color}
-  >
+    stroke={props.color}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -241,8 +243,7 @@ export const ImageIcon = (props: SvgProps) => (
     viewBox="0 0 20 20"
     width={props.width}
     height={props.height}
-    fill={props.color}
-  >
+    fill={props.color}>
     <Path
       fillRule="evenodd"
       d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
@@ -258,8 +259,7 @@ export const UploadIcon = (props: SvgProps) => (
     strokeWidth={2}
     width={props.width}
     height={props.height}
-    stroke={props.color}
-  >
+    stroke={props.color}>
     <Path
       strokeLinecap="round"
       strokeLinejoin="round"
