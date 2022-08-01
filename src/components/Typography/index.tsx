@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     // lineHeight: normalizeY(isAndroid ? 18.0 : 16.0),
   },
   sm: {
-    fontSize: normalizeY(isAndroid ? 16.0 : 14.0),
-    lineHeight: normalizeY(isAndroid ? 20.0 : 20.0),
+    fontSize: normalizeY(isAndroid ? 16.0 : 13.0),
+    lineHeight: normalizeY(isAndroid ? 20.0 : 19.0),
   },
   h1: {
     fontSize: normalizeY(isAndroid ? 18.0 : 16.0),

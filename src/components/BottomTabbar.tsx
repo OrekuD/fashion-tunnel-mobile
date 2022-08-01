@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
+import {BottomTabsParams} from '../../types';
 import {screenwidth} from '../constants';
 import colors from '../constants/colors';
 import {normalizeX, normalizeY} from '../utils/normalize';
@@ -19,42 +21,51 @@ import {
   UserFilledIcon,
   UserIcon,
 } from './Icons';
+import Typography from './Typography';
 
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: 0,
-    bottom: 0,
+    left: normalizeX(18),
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-evenly',
-    width: screenwidth,
+    width: screenwidth - normalizeX(36),
+    height: normalizeY(66),
+    borderRadius: normalizeY(66 / 2),
     paddingHorizontal: normalizeX(16),
     zIndex: 10000,
+    backgroundColor: colors.deepgrey,
     shadowColor: colors.grey,
-    shadowOffset: {width: 1, height: 1},
+    shadowOffset: {width: 10, height: 10},
     shadowOpacity: 0.3,
     shadowRadius: 8,
   },
   tab: {
     flex: 1,
-    paddingTop: normalizeY(24),
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
   activeIndicator: {
-    position: 'absolute',
-    top: '0%',
-    left: (screenwidth - normalizeX(32)) / 3 / 2,
-    transform: [{translateX: -normalizeX(36 / 2)}],
-    height: normalizeY(3),
-    width: normalizeX(36),
+    height: normalizeY(8),
+    width: normalizeY(8),
+    borderRadius: normalizeY(8 / 2),
+    backgroundColor: colors.orange,
+    marginBottom: normalizeY(6),
   },
   indicatorWrapper: {
     width: screenwidth,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  linearGradient: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    zIndex: 9999,
+    width: screenwidth,
   },
 });
 
@@ -67,27 +78,31 @@ const BottomTabbar = (props: BottomTabBarProps) => {
 
   type Route = {
     icon: typeof DashboardIcon;
-    filledIcon: typeof DashboardIcon;
-    // route: keyof BottomTabNavigatorProps;
-    route: any;
+    route: keyof BottomTabsParams;
+    label: string;
   };
 
   const routes: Array<Route> = React.useMemo(
     () => [
       {
         icon: DashboardIcon,
-        filledIcon: DashboardFilledIcon,
-        route: 'DashboardScreen',
+        route: 'HomeScreen',
+        label: 'Home',
       },
       {
         icon: PastIcon,
-        filledIcon: PastIcon,
-        route: 'PreviousScansScreen',
+        route: 'ExploreScreen',
+        label: 'Explore',
       },
       {
         icon: UserIcon,
-        filledIcon: UserFilledIcon,
+        route: 'OrdersScreen',
+        label: 'Orders',
+      },
+      {
+        icon: UserIcon,
         route: 'ProfileScreen',
+        label: 'Profile',
       },
     ],
     [],
@@ -95,40 +110,43 @@ const BottomTabbar = (props: BottomTabBarProps) => {
 
   return (
     <>
+      <LinearGradient
+        colors={[
+          'rgba(255, 255, 255, 0)',
+          'rgba(255, 255, 255, 0.5)',
+          'rgba(255, 255, 255, 1)',
+        ]}
+        style={{
+          ...styles.linearGradient,
+          height: normalizeY(66) + (bottom || normalizeY(12)) + normalizeY(100),
+        }}
+      />
       <View
         style={{
           ...styles.container,
-          height: HEIGHT,
-          paddingBottom: (bottom || normalizeY(12)) + normalizeY(12),
-          backgroundColor: colors.white,
+          // height: HEIGHT,
+          bottom: bottom || normalizeY(12),
         }}>
-        {routes.map(({icon: Icon, filledIcon: FilledIcon, route}, index) => {
+        {routes.map(({icon: Icon, route, label}, index) => {
           const isFocused = props.state.index === index;
           return (
             <TouchableOpacity
               activeOpacity={0.8}
               key={index}
-              // onPress={() => props.navigation.navigate(route)}
+              onPress={() => props.navigation.navigate(route)}
               style={styles.tab}>
               {isFocused ? (
-                <FilledIcon
-                  width={normalizeY(24)}
-                  height={normalizeY(24)}
-                  color={colors.primary}
-                />
+                <>
+                  <View style={styles.activeIndicator} />
+                  <Typography variant="sm" color={colors.white}>
+                    {label.toUpperCase()}
+                  </Typography>
+                </>
               ) : (
                 <Icon
                   width={normalizeY(24)}
                   height={normalizeY(24)}
-                  color={colors.primary}
-                />
-              )}
-              {isFocused && (
-                <View
-                  style={{
-                    ...styles.activeIndicator,
-                    backgroundColor: colors.primary,
-                  }}
+                  color="#B9B6B8"
                 />
               )}
             </TouchableOpacity>
