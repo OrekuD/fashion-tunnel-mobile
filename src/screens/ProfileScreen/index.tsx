@@ -18,7 +18,7 @@ import {AxiosResponse} from 'axios';
 import ErrorResponse from '../../network/responses/ErrorResponse';
 import {authenticationActions} from '../../store/slices/authentication.slice';
 import {userActions} from '../../store/slices/user.slice';
-import {LogoutIcon, SettingsIcon, UserCircleIcon} from '../../components/Icons';
+import {LogoutIcon, SettingsIcon, UserIcon} from '../../components/Icons';
 import {useSelectState} from '../../store/selectors';
 import colors from '../../constants/colors';
 
@@ -104,7 +104,7 @@ const ProfileScreen = () => {
           ProfileScreen
         </Typography>
         <View style={styles.profile}>
-          <UserCircleIcon
+          <UserIcon
             width={normalizeY(42)}
             height={normalizeY(42)}
             color={colors.darkgrey}

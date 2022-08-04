@@ -14,13 +14,7 @@ import {BottomTabsParams} from '../../types';
 import {screenwidth} from '../constants';
 import colors from '../constants/colors';
 import {normalizeX, normalizeY} from '../utils/normalize';
-import {
-  DashboardFilledIcon,
-  DashboardIcon,
-  PastIcon,
-  UserFilledIcon,
-  UserIcon,
-} from './Icons';
+import {CartIcon, ExploreIcon, HomeIcon, UserIcon} from './Icons';
 import Typography from './Typography';
 
 const styles = StyleSheet.create({
@@ -77,7 +71,7 @@ const BottomTabbar = (props: BottomTabBarProps) => {
   );
 
   type Route = {
-    icon: typeof DashboardIcon;
+    icon: typeof HomeIcon;
     route: keyof BottomTabsParams;
     label: string;
   };
@@ -85,17 +79,17 @@ const BottomTabbar = (props: BottomTabBarProps) => {
   const routes: Array<Route> = React.useMemo(
     () => [
       {
-        icon: DashboardIcon,
+        icon: HomeIcon,
         route: 'HomeScreen',
         label: 'Home',
       },
       {
-        icon: PastIcon,
+        icon: ExploreIcon,
         route: 'ExploreScreen',
         label: 'Explore',
       },
       {
-        icon: UserIcon,
+        icon: CartIcon,
         route: 'OrdersScreen',
         label: 'Orders',
       },
