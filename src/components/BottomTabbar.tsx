@@ -132,7 +132,10 @@ const BottomTabbar = (props: BottomTabBarProps) => {
               {isFocused ? (
                 <>
                   <View style={styles.activeIndicator} />
-                  <Typography variant="sm" color={colors.white}>
+                  <Typography
+                    variant="sm"
+                    fontWeight={500}
+                    color={colors.white}>
                     {label.toUpperCase()}
                   </Typography>
                 </>

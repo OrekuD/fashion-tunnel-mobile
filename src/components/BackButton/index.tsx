@@ -7,9 +7,9 @@ import {ArrowLeftIcon} from '../Icons';
 
 const styles = StyleSheet.create({
   container: {
-    width: normalizeY(36),
-    height: normalizeY(36),
-    borderRadius: normalizeY(36 / 2),
+    width: normalizeY(42),
+    height: normalizeY(42),
+    borderRadius: normalizeY(42 / 2),
     backgroundColor: colors.deepgrey,
     alignItems: 'center',
     justifyContent: 'center',
@@ -29,7 +29,10 @@ const BackButton = (props: Props) => {
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={props.onPress}
-      style={{...styles.container, top: top + normalizeY(12)}}>
+      style={{
+        ...styles.container,
+        top: (top || normalizeY(12)) + normalizeY(8),
+      }}>
       <ArrowLeftIcon
         width={normalizeY(24)}
         height={normalizeY(24)}

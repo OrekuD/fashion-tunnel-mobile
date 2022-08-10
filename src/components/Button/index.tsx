@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native';
 import {screenwidth} from '../../constants';
 import colors from '../../constants/colors';
@@ -27,6 +28,7 @@ interface Props {
   onPress: () => void;
   isLoading?: boolean;
   isDisabled?: boolean;
+  style?: ViewStyle;
 }
 
 const Button = (props: Props) => {
@@ -40,6 +42,7 @@ const Button = (props: Props) => {
           props.isDisabled || props.isLoading
             ? 'rgba(41, 37, 37, 0.5)'
             : colors.deepgrey,
+        ...props.style,
       }}
       disabled={props.isDisabled}>
       {props.isLoading ? (

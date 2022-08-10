@@ -3,6 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import BottomTabbar from './src/components/BottomTabbar';
+import CartScreen from './src/screens/CartScreen';
 import ExploreScreen from './src/screens/ExploreScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
@@ -39,9 +40,11 @@ const RootStackNavigation = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      {authentication?.isAuthenticated ? (
+      {/* <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} /> */}
+      {authentication.isAuthenticated ? (
         <>
           <Stack.Screen name="MainScreen" component={BottomTabNavigation} />
+          <Stack.Screen name="CartScreen" component={CartScreen} />
         </>
       ) : (
         <>

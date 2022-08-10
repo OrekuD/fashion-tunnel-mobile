@@ -15,8 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
 import {RootStackParams} from '../../../types';
-import Button from '../../components/Button';
-import {ArrowLeftIcon, ArrowRightIcon} from '../../components/Icons';
+import {ArrowRightIcon, Logo} from '../../components/Icons';
 import Typography from '../../components/Typography';
 import {screenheight, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
@@ -130,6 +129,15 @@ const styles = StyleSheet.create({
     height: normalizeY(200),
     zIndex: 10,
   },
+  logo: {
+    position: 'absolute',
+    left: 0,
+    width: screenwidth,
+    // height: normalizeY(200),
+    zIndex: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 interface Props extends StackScreenProps<RootStackParams, 'OnboardingScreen'> {}
@@ -139,7 +147,7 @@ const OnboardingScreen = (props: Props) => {
   const sliderRef = useRef<ScrollView>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
   const dispatch = useDispatch();
-  const {bottom} = useSafeAreaInsets();
+  const {bottom, top} = useSafeAreaInsets();
 
   const handleNext = () => {
     if (slideIndex === 2) {
@@ -192,6 +200,13 @@ const OnboardingScreen = (props: Props) => {
   return (
     <View style={styles.parent}>
       <StatusBar barStyle="light-content" translucent />
+      <View
+        style={{
+          ...styles.logo,
+          top: top + normalizeY(0),
+        }}>
+        <Logo scale={2} color={colors.white} />
+      </View>
       <View
         style={{
           ...styles.slideIndexIndicator,

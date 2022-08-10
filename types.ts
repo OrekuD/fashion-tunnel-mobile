@@ -3,6 +3,7 @@ export type RootStackParams = {
   SignInScreen: undefined;
   SignUpScreen: undefined;
   MainScreen: undefined;
+  CartScreen: undefined;
 };
 
 export type BottomTabsParams = {

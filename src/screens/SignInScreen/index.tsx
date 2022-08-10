@@ -25,6 +25,7 @@ import {authenticationActions} from '../../store/slices/authentication.slice';
 import {userActions} from '../../store/slices/user.slice';
 import ErrorResponse from '../../network/responses/ErrorResponse';
 import colors from '../../constants/colors';
+import {screenheight} from '../../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -91,8 +92,8 @@ const SignInScreen = (props: Props) => {
     <KeyboardAvoidingView style={{flex: 1}} behavior="height">
       <ScrollView
         contentContainerStyle={{
-          flex: 1,
-          paddingTop: normalizeY(24) + top,
+          // flex: 1,
+          paddingTop: normalizeY(24) + top + screenheight * 0.2,
         }}
         style={{backgroundColor: colors.white}}>
         <View style={styles.container}>

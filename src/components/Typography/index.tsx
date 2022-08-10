@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
     // lineHeight: normalizeY(isAndroid ? 18.0 : 16.0),
   },
   sm: {
-    fontSize: normalizeY(isAndroid ? 16.0 : 13.0),
-    lineHeight: normalizeY(isAndroid ? 20.0 : 19.0),
+    fontSize: normalizeY(isAndroid ? 16.0 : 14.0),
+    lineHeight: normalizeY(isAndroid ? 20.0 : 24.0),
   },
   h1: {
     fontSize: normalizeY(isAndroid ? 18.0 : 16.0),
@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
 interface Props extends TextProps {
   children: ReactNode;
   variant: 'tiny' | 'sm' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-  fontFamily?: 'Poppins' | 'Open-Sans';
   fontWeight?: 300 | 400 | 500 | 600 | 700;
   fontSize?: number;
   lineHeight?: number;
@@ -53,7 +52,7 @@ interface Props extends TextProps {
 
 const Typography: FC<Props> = (props: Props) => {
   const fontFamily = React.useMemo<string>(() => {
-    let font = props.fontFamily ? props.fontFamily : 'Poppins';
+    let font = 'Poppins';
     if (props.fontWeight) {
       font +=
         props.fontWeight === 300
@@ -70,14 +69,14 @@ const Typography: FC<Props> = (props: Props) => {
     }
 
     return font;
-  }, [props.fontFamily, props.fontWeight]);
+  }, [props.fontWeight]);
 
   return (
     <Text
       {...props}
       style={[
         {
-          //   fontFamily,
+          fontFamily,
           fontSize: props.fontSize,
           lineHeight: props.lineHeight,
           color: props.color,

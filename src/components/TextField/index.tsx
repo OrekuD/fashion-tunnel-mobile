@@ -13,14 +13,14 @@ import Typography from '../Typography';
 
 const styles = StyleSheet.create({
   container: {
-    width: screenwidth - normalizeX(48),
+    width: '100%',
     marginBottom: normalizeY(16),
   },
   textInputContainer: {
     width: '100%',
-    height: normalizeY(60),
-    borderRadius: normalizeY(60 / 2),
-    backgroundColor: 'rgba(249, 139, 57, 0.15)',
+    height: normalizeY(52),
+    borderRadius: normalizeY(52 / 2),
+    backgroundColor: colors.lightgrey,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: normalizeX(16),
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     marginRight: normalizeX(16),
     color: colors.black,
     fontSize: normalizeY(14),
+    fontFamily: 'Poppins-Regular',
   },
 });
 
@@ -49,7 +50,7 @@ const TextField = (props: Props) => {
         {props.leftIcon}
         <TextInput
           style={styles.textInput}
-          placeholderTextColor={colors.darkgrey}
+          placeholderTextColor="#B8B8B8"
           {...props.textInputProps}
         />
         {props.rightIcon}
