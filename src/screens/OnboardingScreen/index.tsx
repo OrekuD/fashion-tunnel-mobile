@@ -299,7 +299,7 @@ const OnboardingScreen = (props: Props) => {
         onScroll={Animated.event(
           [{nativeEvent: {contentOffset: {x: scrollX}}}],
           {
-            useNativeDriver: false,
+            useNativeDriver: true,
           },
         )}
         onMomentumScrollEnd={onMomentumScrollEnd}>

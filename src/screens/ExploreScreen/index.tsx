@@ -15,6 +15,8 @@ import CachedImage from '../../components/CachedImage';
 import {Logo, NotificationIcon, SearchIcon} from '../../components/Icons';
 import TextField from '../../components/TextField';
 import LinearGradient from 'react-native-linear-gradient';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootStackParams} from '../../../types';
 
 const styles = StyleSheet.create({
   header: {
@@ -74,7 +76,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const ExploreScreen = () => {
+interface Props extends StackScreenProps<RootStackParams, 'CategoryScreen'> {}
+
+const ExploreScreen = (props: Props) => {
   const {top} = useSafeAreaInsets();
   const categories = React.useMemo(
     () => [
@@ -150,6 +154,12 @@ const ExploreScreen = () => {
           <TouchableOpacity
             style={styles.category}
             activeOpacity={0.9}
+            onPress={() =>
+              props.navigation.navigate('CategoryScreen', {
+                categoryId: '',
+                categoryTitle: '',
+              })
+            }
             key={index}>
             <CachedImage source={{uri}} style={styles.image} />
             <View style={styles.content}>

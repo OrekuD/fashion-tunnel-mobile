@@ -4,13 +4,16 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React from 'react';
 import BottomTabbar from './src/components/BottomTabbar';
 import CartScreen from './src/screens/CartScreen';
+import CategoryScreen from './src/screens/CategoryScreen';
 import ExploreScreen from './src/screens/ExploreScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import OnboardingScreen from './src/screens/OnboardingScreen';
 import OrdersScreen from './src/screens/OrdersScreen';
+import ProductScreen from './src/screens/ProductScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
+import SizeGuideScreen from './src/screens/SizeGuideScreen';
 import {useSelectState} from './src/store/selectors';
 import {BottomTabsParams, RootStackParams} from './types';
 
@@ -45,6 +48,9 @@ const RootStackNavigation = () => {
         <>
           <Stack.Screen name="MainScreen" component={BottomTabNavigation} />
           <Stack.Screen name="CartScreen" component={CartScreen} />
+          <Stack.Screen name="ProductScreen" component={ProductScreen} />
+          <Stack.Screen name="SizeGuideScreen" component={SizeGuideScreen} />
+          <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
         </>
       ) : (
         <>

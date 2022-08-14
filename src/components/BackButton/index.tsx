@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import colors from '../../constants/colors';
 import {normalizeX, normalizeY} from '../../utils/normalize';
-import {ArrowLeftIcon} from '../Icons';
+import {ArrowLeftIcon, ArrowRightIcon} from '../Icons';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,10 +33,13 @@ const BackButton = (props: Props) => {
         ...styles.container,
         top: (top || normalizeY(12)) + normalizeY(8),
       }}>
-      <ArrowLeftIcon
+      <ArrowRightIcon
         width={normalizeY(24)}
         height={normalizeY(24)}
         color={colors.white}
+        style={{
+          transform: [{rotate: '180deg'}],
+        }}
       />
     </TouchableOpacity>
   );

@@ -3,6 +3,7 @@ import {
   Animated,
   KeyboardAvoidingView,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -11,7 +12,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Typography from '../../components/Typography';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 import colors from '../../constants/colors';
-import {screenheight, screenwidth} from '../../constants';
+import {cedi, images, screenheight, screenwidth} from '../../constants';
 import {
   CartIcon,
   Logo,
@@ -22,6 +23,8 @@ import CachedImage from '../../components/CachedImage';
 import TextField from '../../components/TextField';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParams} from '../../../types';
+import {wrapText} from '../../utils/wrapText';
+import Section from '../../components/Section';
 
 const styles = StyleSheet.create({
   header: {
@@ -64,124 +67,83 @@ interface Props extends StackScreenProps<RootStackParams, 'MainScreen'> {}
 const HomeScreen = (props: Props) => {
   const {top} = useSafeAreaInsets();
 
-  const scrollX = React.useRef(new Animated.Value(0)).current;
-
-  const itemWidth = React.useMemo(() => screenwidth * 0.5, []);
-  const spacerWidth = React.useMemo(() => (screenwidth - itemWidth) / 2, []);
-
-  const products = [
-    {key: '87'},
-    {id: '0'},
-    {id: '0'},
-    {id: '0'},
-    {id: '0'},
-    {id: '0'},
-    {id: '0'},
-    {key: '8'},
-  ];
-
   return (
-    <ScrollView
-      contentContainerStyle={{
-        flex: 1,
-        paddingTop: top,
-        // paddingHorizontal: normalizeX(24),
-      }}
-      style={{backgroundColor: colors.white}}>
-      <View style={{paddingHorizontal: normalizeX(24)}}>
-        <View style={styles.header}>
-          <Logo scale={2} color={colors.deepgrey} />
-          <TouchableOpacity style={styles.iconButton}>
-            <NotificationIcon
-              width={normalizeY(24)}
-              height={normalizeY(24)}
-              color={colors.deepgrey}
-            />
-          </TouchableOpacity>
-          <CachedImage
-            source={{
-              uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-            }}
-            style={styles.profileImage}
-          />
-        </View>
-        <View style={{...styles.row, marginBottom: normalizeY(12)}}>
-          <View style={{flex: 1, marginRight: normalizeX(12)}}>
-            <TextField
-              containerStyle={{
-                marginBottom: 0,
+    <View style={{flex: 1}}>
+      <StatusBar barStyle="dark-content" translucent />
+      <View
+        style={{
+          width: screenwidth,
+          height: top,
+          backgroundColor: colors.white,
+        }}
+      />
+      <ScrollView
+        contentContainerStyle={{
+          // paddingHorizontal: normalizeX(24),
+          paddingBottom: normalizeY(200),
+        }}
+        style={{backgroundColor: colors.white}}>
+        <View style={{paddingHorizontal: normalizeX(24)}}>
+          <View style={styles.header}>
+            <Logo scale={2} color={colors.deepgrey} />
+            <TouchableOpacity style={styles.iconButton}>
+              <NotificationIcon
+                width={normalizeY(24)}
+                height={normalizeY(24)}
+                color={colors.deepgrey}
+              />
+            </TouchableOpacity>
+            <CachedImage
+              source={{
+                uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
               }}
-              leftIcon={
-                <SearchIcon
-                  width={normalizeY(24)}
-                  height={normalizeY(24)}
-                  color={colors.deepgrey}
-                  style={{marginRight: normalizeX(12)}}
-                />
-              }
-              textInputProps={{
-                placeholder: 'Search Product',
-              }}
+              style={styles.profileImage}
             />
           </View>
-          <TouchableOpacity
-            style={styles.iconButton}
-            onPress={() => props.navigation.navigate('CartScreen')}>
-            <CartIcon
-              width={normalizeY(24)}
-              height={normalizeY(24)}
-              color={colors.deepgrey}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-      {/* <View> */}
-      <Animated.ScrollView
-        snapToAlignment="center"
-        snapToInterval={itemWidth + normalizeX(24)}
-        contentContainerStyle={{
-          paddingHorizontal: normalizeX(24),
-          paddingTop: normalizeY(12),
-        }}
-        decelerationRate="fast"
-        horizontal
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {x: scrollX}}}],
-          {useNativeDriver: false},
-        )}
-        showsHorizontalScrollIndicator={false}>
-        {products.map(({id, key}, index) => {
-          return (
-            <Animated.View
-              style={{
-                width: itemWidth,
-                height: itemWidth * 1.2,
-                backgroundColor: 'white',
-                shadowColor: 'rgba(179, 180, 187, 0.6)',
-                shadowOffset: {width: -1, height: -0.8},
-                shadowOpacity: 0.3,
-                shadowRadius: 5,
-                marginRight: normalizeX(18),
-                borderRadius: normalizeY(16),
-              }}
-              key={index}>
-              <View
-                style={{
-                  width: itemWidth - normalizeX(18),
-                  height: '100%',
-                  // backgroundColor: 'white',
-                  // shadowColor: colors.grey,
-                  // shadowOffset: {width: 10, height: 10},
-                  // shadowOpacity: 0.3,
-                  // shadowRadius: 8,
+          <View style={{...styles.row, marginBottom: normalizeY(12)}}>
+            <View style={{flex: 1, marginRight: normalizeX(12)}}>
+              <TextField
+                containerStyle={{
+                  marginBottom: 0,
+                }}
+                leftIcon={
+                  <SearchIcon
+                    width={normalizeY(24)}
+                    height={normalizeY(24)}
+                    color={colors.deepgrey}
+                    style={{marginRight: normalizeX(12)}}
+                  />
+                }
+                textInputProps={{
+                  placeholder: 'Search Product',
                 }}
               />
-            </Animated.View>
-          );
-        })}
-      </Animated.ScrollView>
-      {/* </View> */}
-    </ScrollView>
+            </View>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => props.navigation.navigate('CartScreen')}>
+              <CartIcon
+                width={normalizeY(24)}
+                height={normalizeY(24)}
+                color={colors.deepgrey}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Section
+          sectionTitle="New Arrivals"
+          navigation={props.navigation}
+          products={images}
+          sectionDescription=""
+        />
+        <Section
+          sectionTitle="New Summer Arrivals"
+          navigation={props.navigation}
+          products={images}
+          sectionDescription=""
+        />
+      </ScrollView>
+    </View>
   );
 };
 

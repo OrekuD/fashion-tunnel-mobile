@@ -9,7 +9,7 @@ const colors = {
   darkgrey: '#868688',
   orange: '#F98B3A',
   deepgrey: '#292525',
-  lightgrey: '#FAFAFA',
+  lightgrey: '#F5F4F5',
 };
 
 export default colors;

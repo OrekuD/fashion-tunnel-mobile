@@ -4,6 +4,9 @@ export type RootStackParams = {
   SignUpScreen: undefined;
   MainScreen: undefined;
   CartScreen: undefined;
+  CategoryScreen: {categoryTitle: string; categoryId: string};
+  ProductScreen: {productId: string};
+  SizeGuideScreen: {productId: string};
 };
 
 export type BottomTabsParams = {

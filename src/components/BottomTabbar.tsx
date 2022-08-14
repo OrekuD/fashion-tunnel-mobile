@@ -114,6 +114,7 @@ const BottomTabbar = (props: BottomTabBarProps) => {
           ...styles.linearGradient,
           height: normalizeY(66) + (bottom || normalizeY(12)) + normalizeY(100),
         }}
+        pointerEvents="none"
       />
       <View
         style={{

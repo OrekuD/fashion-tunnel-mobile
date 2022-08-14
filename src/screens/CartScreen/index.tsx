@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import CachedImage from '../../components/CachedImage';
 import {CancelIcon, MinusIcon, PlusIcon} from '../../components/Icons';
 import Typography from '../../components/Typography';
-import {screenwidth} from '../../constants';
+import {cedi, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 
@@ -88,7 +88,7 @@ const CartScreen = (props: Props) => {
                 {name}
               </Typography>
               <Typography variant="sm" fontWeight={500} color={colors.deepgrey}>
-                ₵{price.toFixed(2)}
+                {`${cedi} ${price.toFixed(2)}`}
               </Typography>
               <View
                 style={{

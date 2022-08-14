@@ -204,6 +204,112 @@ export const UserIcon = (props: SvgProps) => (
   </Svg>
 );
 
+export const HeartIcon = (props: SvgProps) => (
+  <Svg
+    width={props.width}
+    height={props.height}
+    style={props.style}
+    viewBox="0 0 24 24"
+    fill="none">
+    <Path
+      id="Stroke 1"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2.87187 11.5983C1.79887 8.24832 3.05287 4.41932 6.56987 3.28632C8.41987 2.68932 10.4619 3.04132 11.9999 4.19832C13.4549 3.07332 15.5719 2.69332 17.4199 3.28632C20.9369 4.41932 22.1989 8.24832 21.1269 11.5983C19.4569 16.9083 11.9999 20.9983 11.9999 20.9983C11.9999 20.9983 4.59787 16.9703 2.87187 11.5983Z"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Stroke 3"
+      d="M16 6.70001C17.07 7.04601 17.826 8.00101 17.917 9.12201"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export const BagIcon = (props: SvgProps) => (
+  <Svg
+    width={props.width}
+    height={props.height}
+    style={props.style}
+    viewBox="0 0 24 24"
+    fill="none">
+    <Path
+      id="Path_33955"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M16.5136 21.5H8.16579C5.09943 21.5 2.74703 20.3925 3.41522 15.9348L4.19325 9.89363C4.60515 7.66937 6.02392 6.81812 7.26877 6.81812H17.4473C18.7104 6.81812 20.0468 7.73345 20.5228 9.89363L21.3008 15.9348C21.8683 19.8891 19.58 21.5 16.5136 21.5Z"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Path_33956"
+      d="M16.651 6.59842C16.651 4.21235 14.7167 2.27805 12.3306 2.27805V2.27805C11.1816 2.27319 10.078 2.72622 9.26381 3.53697C8.44963 4.34772 7.99193 5.44941 7.99194 6.59842H7.99194"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Line_192"
+      d="M15.2962 11.1018H15.2505"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Line_193"
+      d="M9.46566 11.1018H9.41989"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export const HeartFilledIcon = (props: SvgProps) => (
+  <Svg
+    width={props.width}
+    height={props.height}
+    style={props.style}
+    viewBox="0 0 24 24"
+    fill="none">
+    <Path
+      id="Heart_2"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M15.8498 2.50071C16.4808 2.50071 17.1108 2.58971 17.7098 2.79071C21.4008 3.99071 22.7308 8.04071 21.6198 11.5807C20.9898 13.3897 19.9598 15.0407 18.6108 16.3897C16.6798 18.2597 14.5608 19.9197 12.2798 21.3497L12.0298 21.5007L11.7698 21.3397C9.4808 19.9197 7.3498 18.2597 5.4008 16.3797C4.0608 15.0307 3.0298 13.3897 2.3898 11.5807C1.2598 8.04071 2.5898 3.99071 6.3208 2.76971C6.6108 2.66971 6.9098 2.59971 7.2098 2.56071H7.3298C7.6108 2.51971 7.8898 2.50071 8.1698 2.50071H8.2798C8.9098 2.51971 9.5198 2.62971 10.1108 2.83071H10.1698C10.2098 2.84971 10.2398 2.87071 10.2598 2.88971C10.4808 2.96071 10.6898 3.04071 10.8898 3.15071L11.2698 3.32071C11.3616 3.36968 11.4647 3.44451 11.5538 3.50918C11.6102 3.55015 11.661 3.58705 11.6998 3.61071C11.7161 3.62034 11.7327 3.63002 11.7494 3.63978C11.8352 3.68983 11.9245 3.74197 11.9998 3.79971C13.1108 2.95071 14.4598 2.49071 15.8498 2.50071ZM18.5098 9.70071C18.9198 9.68971 19.2698 9.36071 19.2998 8.93971V8.82071C19.3298 7.41971 18.4808 6.15071 17.1898 5.66071C16.7798 5.51971 16.3298 5.74071 16.1798 6.16071C16.0398 6.58071 16.2598 7.04071 16.6798 7.18971C17.3208 7.42971 17.7498 8.06071 17.7498 8.75971V8.79071C17.7308 9.01971 17.7998 9.24071 17.9398 9.41071C18.0798 9.58071 18.2898 9.67971 18.5098 9.70071Z"
+      fill={props.color}
+    />
+  </Svg>
+);
+
+export const ChevronRightIcon = (props: SvgProps) => (
+  <Svg
+    width={props.width}
+    height={props.height}
+    style={props.style}
+    viewBox="0 0 24 24"
+    fill="none">
+    <Path
+      d="M8.5 5L15.5 12L8.5 19"
+      stroke={props.color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
 export const SettingsIcon = (props: SvgProps) => (
   <Svg
     width={props.width}
@@ -228,6 +334,52 @@ export const SettingsIcon = (props: SvgProps) => (
       r="2.63616"
       stroke={props.color}
       strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export const FilterIcon = (props: SvgProps) => (
+  <Svg
+    width={props.width}
+    height={props.height}
+    style={props.style}
+    viewBox="0 0 24 24"
+    fill="none">
+    <Path
+      id="Stroke 1"
+      d="M10.3301 16.5929H4.02942"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Stroke 3"
+      d="M13.1405 6.90036H19.4412"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Stroke 5"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M8.72629 6.84625C8.72629 5.5506 7.66813 4.5 6.36314 4.5C5.05816 4.5 4 5.5506 4 6.84625C4 8.14191 5.05816 9.19251 6.36314 9.19251C7.66813 9.19251 8.72629 8.14191 8.72629 6.84625Z"
+      stroke={props.color}
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Stroke 7"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M20 16.5538C20 15.2581 18.9426 14.2075 17.6376 14.2075C16.3318 14.2075 15.2737 15.2581 15.2737 16.5538C15.2737 17.8494 16.3318 18.9 17.6376 18.9C18.9426 18.9 20 17.8494 20 16.5538Z"
+      stroke={props.color}
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
