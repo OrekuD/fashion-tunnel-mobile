@@ -9,9 +9,11 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   StatusBar,
+  ActivityIndicator,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDispatch} from 'react-redux';
 import {RootStackParams} from '../../../types';
 import BackButton from '../../components/BackButton';
 import CachedImage from '../../components/CachedImage';
@@ -23,11 +25,20 @@ import {
   ChevronRightIcon,
   HeartFilledIcon,
   HeartIcon,
+  MinusIcon,
+  PlusIcon,
 } from '../../components/Icons';
 import Typography from '../../components/Typography';
 import {cedi, isAndroid, screenheight, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
+import Product from '../../models/Product';
 import ClothSizes from '../../namespaces/ClothSizes';
+import favouritesAsyncActions from '../../store/actions/favourites.action';
+import productsAsyncActions from '../../store/actions/products.action';
+import RequestManager from '../../store/request-manager';
+import {useSelectState} from '../../store/selectors';
+import {cartActions} from '../../store/slices/cart.slice';
+import {favouritesActions} from '../../store/slices/favourites.slice';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 
 const styles = StyleSheet.create({
@@ -136,7 +147,7 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props extends StackScreenProps<RootStackParams, 'SizeGuideScreen'> {}
+interface Props extends StackScreenProps<RootStackParams, 'ProductScreen'> {}
 
 const ProductScreen = (props: Props) => {
   const {top, bottom} = useSafeAreaInsets();
@@ -146,13 +157,66 @@ const ProductScreen = (props: Props) => {
   const [activeSectionIndexes, setActiveSectionIndexes] = React.useState<
     Array<number>
   >([0, 1]);
+  const {products, favourites, request, cart} = useSelectState();
+  const dispatch = useDispatch();
+  const [product, setProduct] = React.useState<Product>();
+  const [updatedAt] = React.useState(request.updatedAt);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [quantity, setQuantity] = React.useState(1);
 
-  const images = [
-    'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736957_1000.jpg',
-    'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736952_1000.jpg',
-    'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736887_1000.jpg',
-    'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736927_1000.jpg',
-  ];
+  // const images = [
+  //   'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736957_1000.jpg',
+  //   'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736952_1000.jpg',
+  //   'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736887_1000.jpg',
+  //   'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736927_1000.jpg',
+  // ];
+
+  const isItemInCart = React.useMemo(
+    () =>
+      cart.products.findIndex(({id}) => id === props.route.params.productId) >=
+      0,
+    [cart.products, props.route.params.productId],
+  );
+
+  const isItemInFavourites = React.useMemo(
+    () =>
+      favourites.list.findIndex(
+        ({id}) => id === props.route.params.productId,
+      ) >= 0,
+    [favourites.list, props.route.params.productId],
+  );
+
+  React.useEffect(() => {
+    if (updatedAt === request.updatedAt) {
+      return;
+    }
+    const RM = new RequestManager(request, dispatch);
+
+    if (RM.isFulfilled(productsAsyncActions.getProduct.typePrefix)) {
+      RM.consume(productsAsyncActions.getProduct.typePrefix);
+      setIsLoading(false);
+      return;
+    }
+
+    if (RM.isRejected(productsAsyncActions.getProduct.typePrefix)) {
+      RM.consume(productsAsyncActions.getProduct.typePrefix);
+      setIsLoading(false);
+      return;
+    }
+  }, [updatedAt, request.updatedAt]);
+
+  React.useEffect(() => {
+    if (!props.route.params.productId) return;
+    const _product = products.list.find(
+      ({id}) => id === props.route.params.productId,
+    );
+    if (!_product) {
+      dispatch(productsAsyncActions.getProduct(props.route.params.productId));
+      return;
+    }
+    setProduct(_product);
+    setIsLoading(false);
+  }, [products.list, props.route.params.productId]);
 
   const animate = (index: number) => {
     const inputRange = [
@@ -173,12 +237,6 @@ const ProductScreen = (props: Props) => {
       name: 'SIZES',
       component: (
         <>
-          {/* <Typography
-            variant="sm"
-            style={{marginTop: normalizeY(24)}}
-            fontWeight={600}>
-            Select size
-          </Typography> */}
           <View style={styles.sizes}>
             {ClothSizes.State.list().map((size, index) => {
               const isSelected = index === selectedSize;
@@ -221,18 +279,98 @@ const ProductScreen = (props: Props) => {
       ),
     },
     {
+      name: 'QUANTITY',
+      component: (
+        <>
+          <View style={styles.sizes}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                setQuantity(prevValue =>
+                  prevValue === 1 ? prevValue : prevValue - 1,
+                );
+                if (isItemInCart && props.route.params.productId) {
+                  dispatch(
+                    cartActions.decreaseProductCount({
+                      productId: props.route.params.productId,
+                    }),
+                  );
+                }
+              }}
+              style={{
+                ...styles.size,
+                // marginRight: index === 4 ? 0 : normalizeX(3),
+                borderColor:
+                  quantity === 1 ? 'rgba(41, 37, 37, 0.2)' : colors.deepgrey,
+                marginRight: 0,
+              }}>
+              <MinusIcon
+                width={normalizeY(16)}
+                height={normalizeY(16)}
+                color={colors.deepgrey}
+              />
+            </TouchableOpacity>
+            <View style={{width: normalizeX(46)}}>
+              <Typography
+                variant="h1"
+                color={colors.deepgrey}
+                textAlign="center">
+                {quantity}
+              </Typography>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                setQuantity(prevValue => prevValue + 1);
+                if (isItemInCart && props.route.params.productId) {
+                  dispatch(
+                    cartActions.increaseProductCount({
+                      productId: props.route.params.productId,
+                    }),
+                  );
+                }
+              }}
+              // onPress={() => setSelectedSize(isSelected ? -1 : size)}
+              style={{
+                ...styles.size,
+                // marginRight: index === 4 ? 0 : normalizeX(3),
+                borderColor: colors.deepgrey,
+                marginLeft: 0,
+              }}>
+              <PlusIcon
+                width={normalizeY(16)}
+                height={normalizeY(16)}
+                color={colors.deepgrey}
+              />
+            </TouchableOpacity>
+          </View>
+        </>
+      ),
+    },
+    {
       name: 'DESCRIPTION',
       component: (
         <>
           <Typography variant="sm" color={colors.deepgrey}>
-            Id minim id mollit officia voluptate reprehenderit anim qui. Laborum
-            reprehenderit est irure nostrud. Lorem sit irure nostrud qui qui
-            pariatur deserunt. Velit cupidatat ea ipsum duis amet qui.
+            {product?.description || ''}
           </Typography>
         </>
       ),
     },
   ];
+
+  if (!product)
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: colors.white,
+        }}>
+        <ActivityIndicator size="small" color={colors.deepgrey} />
+      </View>
+    );
 
   return (
     <View style={styles.container}>
@@ -255,8 +393,14 @@ const ProductScreen = (props: Props) => {
             }}
           />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.8} style={styles.backButton}>
-          {false ? (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.backButton}
+          onPress={() => {
+            dispatch(favouritesActions.updateFavourites({product}));
+            dispatch(favouritesAsyncActions.updateFavourites(product.id));
+          }}>
+          {isItemInFavourites ? (
             <HeartFilledIcon
               width={normalizeY(18)}
               height={normalizeY(18)}
@@ -307,12 +451,12 @@ const ProductScreen = (props: Props) => {
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}>
-            {images.map(uri => (
+            {product.images.map(uri => (
               <CachedImage key={uri} source={{uri}} style={styles.image} />
             ))}
           </Animated.ScrollView>
           <View style={styles.pagination}>
-            {images.map((_, index) => {
+            {product.images.map((_, index) => {
               const {opacity} = animate(index);
               return (
                 <Animated.View style={{...styles.dot, opacity}} key={index} />
@@ -324,6 +468,7 @@ const ProductScreen = (props: Props) => {
           style={{
             width: '100%',
             backgroundColor: colors.white,
+            // backgroundColor: 'red',
             paddingTop: normalizeY(14),
             paddingHorizontal: normalizeX(24),
           }}>
@@ -332,10 +477,10 @@ const ProductScreen = (props: Props) => {
             color={colors.deepgrey}
             textAlign="center"
             fontWeight={600}>
-            Off-white
+            {product.name}
           </Typography>
           <Typography variant="sm" color={colors.deepgrey} textAlign="center">
-            Ea ipsum nulla Lorem laborum do ipsum velit nostrud veniam.
+            {product.description}
           </Typography>
           {sections.map(({component, name}, index) => {
             const isActive = activeSectionIndexes.includes(index);
@@ -388,6 +533,22 @@ const ProductScreen = (props: Props) => {
       </Animated.ScrollView>
       <TouchableOpacity
         activeOpacity={0.8}
+        onPress={() => {
+          if (isItemInCart) {
+            dispatch(cartActions.removeProduct({productId: product.id}));
+          } else {
+            dispatch(
+              cartActions.addProduct({
+                product: {
+                  ...product,
+                  count: quantity,
+                  total: product.price * quantity,
+                  size: selectedSize,
+                },
+              }),
+            );
+          }
+        }}
         style={{...styles.cartButton, bottom: bottom}}>
         <BagIcon
           width={normalizeY(24)}
@@ -413,7 +574,9 @@ const ProductScreen = (props: Props) => {
         <View style={styles.footerContent}>
           <Typography
             variant="h3"
-            fontWeight={500}>{`${cedi} 10.99`}</Typography>
+            fontWeight={500}>{`${cedi} ${product.price.toFixed(
+            2,
+          )}`}</Typography>
         </View>
       </View>
     </View>

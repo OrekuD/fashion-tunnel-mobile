@@ -8,7 +8,7 @@ const interceptorResponseFn = (
 const interceptorErrorFn = (error: any) => {
   if (error.response) {
     const status = error.response.status;
-    console.log({____error: error.response.status});
+    // console.log({____error: error.response.status});
 
     if (status === 422) {
       return Promise.reject({
