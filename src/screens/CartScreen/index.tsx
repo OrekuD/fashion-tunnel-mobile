@@ -3,6 +3,7 @@ import React from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDispatch} from 'react-redux';
 import {RootStackParams} from '../../../types';
 import BackButton from '../../components/BackButton';
 import Button from '../../components/Button';
@@ -11,6 +12,8 @@ import {CancelIcon, MinusIcon, PlusIcon} from '../../components/Icons';
 import Typography from '../../components/Typography';
 import {cedi, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
+import {useSelectState} from '../../store/selectors';
+import {cartActions} from '../../store/slices/cart.slice';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 
 const styles = StyleSheet.create({
@@ -44,26 +47,28 @@ interface Props extends StackScreenProps<RootStackParams, 'CartScreen'> {}
 
 const CartScreen = (props: Props) => {
   const {bottom, top} = useSafeAreaInsets();
-  const cart = [
-    {
-      image:
-        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-      name: 'Casual jeans and shoes',
-      price: 10,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-      name: 'Casual jeans and shoes',
-      price: 10,
-    },
-    {
-      image:
-        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-      name: 'Casual jeans and shoes',
-      price: 10,
-    },
-  ];
+  const {cart} = useSelectState();
+  const dispatch = useDispatch();
+  // const cart = [
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
+  //     name: 'Casual jeans and shoes',
+  //     price: 10,
+  //   },
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
+  //     name: 'Casual jeans and shoes',
+  //     price: 10,
+  //   },
+  //   {
+  //     image:
+  //       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
+  //     name: 'Casual jeans and shoes',
+  //     price: 10,
+  //   },
+  // ];
 
   return (
     <>
@@ -80,9 +85,12 @@ const CartScreen = (props: Props) => {
           paddingTop: top + normalizeY(64),
           paddingHorizontal: normalizeX(24),
         }}>
-        {cart.map(({image, name, price}, index) => (
+        {cart.products.map(({images, name, price, id, count}, index) => (
           <View style={styles.card} key={index}>
-            <CachedImage source={{uri: image}} style={styles.productImage} />
+            <CachedImage
+              source={{uri: images[0]}}
+              style={styles.productImage}
+            />
             <View style={{flex: 1}}>
               <Typography variant="sm" fontWeight={500} color={colors.deepgrey}>
                 {name}
@@ -96,7 +104,12 @@ const CartScreen = (props: Props) => {
                   marginTop: 'auto',
                   marginBottom: normalizeY(2),
                 }}>
-                <TouchableOpacity activeOpacity={0.8} style={styles.iconButton}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.iconButton}
+                  onPress={() => {
+                    dispatch(cartActions.decreaseProductCount({productId: id}));
+                  }}>
                   <MinusIcon
                     width={normalizeY(16)}
                     height={normalizeY(16)}
@@ -106,10 +119,15 @@ const CartScreen = (props: Props) => {
                 </TouchableOpacity>
                 <View style={{width: normalizeX(36)}}>
                   <Typography variant="sm" fontWeight={600} textAlign="center">
-                    1
+                    {count}
                   </Typography>
                 </View>
-                <TouchableOpacity activeOpacity={0.8} style={styles.iconButton}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.iconButton}
+                  onPress={() => {
+                    dispatch(cartActions.increaseProductCount({productId: id}));
+                  }}>
                   <PlusIcon
                     width={normalizeY(16)}
                     height={normalizeY(16)}
