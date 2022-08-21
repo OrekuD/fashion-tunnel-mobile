@@ -5,13 +5,12 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
-import {RootStackParams} from '../../../types';
+import {DeviceTypes, RootStackParams} from '../../../types';
 import Button from '../../components/Button';
 import {
   MailIcon,
@@ -23,16 +22,11 @@ import TextField from '../../components/TextField';
 import Typography from '../../components/Typography';
 import isAnyEmpty from '../../utils/isAnyEmpty';
 import {normalizeX, normalizeY} from '../../utils/normalize';
-import API from '../../constants/api';
-import SignInRequest from '../../network/requests/SignInRequest';
-import {AxiosResponse} from 'axios';
-import AuthenticationResponse from '../../network/responses/AuthenticationResponse';
-import {authenticationActions} from '../../store/slices/authentication.slice';
-import {userActions} from '../../store/slices/user.slice';
-import ErrorResponse from '../../network/responses/ErrorResponse';
 import SignUpRequest from '../../network/requests/SignUpRequest';
 import BackButton from '../../components/BackButton';
 import colors from '../../constants/colors';
+import authenticationAsyncActions from '../../store/actions/authentication.action';
+import {isAndroid} from '../../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -65,7 +59,7 @@ const SignUpScreen = (props: Props) => {
     return !isAnyEmpty([email, password, firstName, lastName]);
   }, [email, password, emailError, firstName, lastName]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!canProceed || isLoading) {
       return;
     }
@@ -74,29 +68,11 @@ const SignUpScreen = (props: Props) => {
     const payload: SignUpRequest = {
       email: email.trim().toLowerCase(),
       password: password.trim(),
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
+      firstname: firstName.trim(),
+      lastname: lastName.trim(),
+      deviceType: isAndroid ? DeviceTypes.ANDROID : DeviceTypes.IOS,
     };
-    try {
-      const response = await API.client.post<
-        SignUpRequest,
-        AxiosResponse<AuthenticationResponse>
-      >('/user/sign-up', payload);
-      dispatch(
-        authenticationActions.addAuthState({
-          accessToken: response.data.accessToken,
-        }),
-      );
-      dispatch(userActions.updateUser({user: response.data.user}));
-      setIsLoading(false);
-      return response.data;
-    } catch (error: any) {
-      setIsLoading(false);
-      // console.log({ error: error?.list });
-      if ((error?.list[0]?.msg as string).toLowerCase() === 'unauthorized') {
-        setEmailError('Your credentials are invalid');
-      }
-    }
+    dispatch(authenticationAsyncActions.signup(payload));
   };
 
   return (

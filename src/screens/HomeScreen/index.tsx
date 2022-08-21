@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   Animated,
   KeyboardAvoidingView,
   ScrollView,
@@ -25,6 +26,10 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParams} from '../../../types';
 import {wrapText} from '../../utils/wrapText';
 import Section from '../../components/Section';
+import productsAsyncActions from '../../store/actions/products.action';
+import {useSelectState} from '../../store/selectors';
+import {useDispatch} from 'react-redux';
+import RequestManager from '../../store/request-manager';
 
 const styles = StyleSheet.create({
   header: {
@@ -66,6 +71,34 @@ interface Props extends StackScreenProps<RootStackParams, 'MainScreen'> {}
 
 const HomeScreen = (props: Props) => {
   const {top} = useSafeAreaInsets();
+  const {products, request} = useSelectState();
+
+  const [isLoading, setIsLoading] = React.useState(false);
+  React.useEffect(() => {
+    dispatch(productsAsyncActions.index());
+  }, []);
+
+  const [updatedAt] = React.useState(request.updatedAt);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (updatedAt === request.updatedAt) {
+      return;
+    }
+    const RM = new RequestManager(request, dispatch);
+
+    if (RM.isFulfilled(productsAsyncActions.index.typePrefix)) {
+      RM.consume(productsAsyncActions.index.typePrefix);
+      setIsLoading(false);
+      return;
+    }
+
+    if (RM.isRejected(productsAsyncActions.index.typePrefix)) {
+      RM.consume(productsAsyncActions.index.typePrefix);
+      setIsLoading(false);
+      return;
+    }
+  }, [updatedAt, request.updatedAt]);
 
   return (
     <View style={{flex: 1}}>
@@ -130,18 +163,26 @@ const HomeScreen = (props: Props) => {
             </TouchableOpacity>
           </View>
         </View>
-        <Section
-          sectionTitle="New Arrivals"
-          navigation={props.navigation}
-          products={images}
-          sectionDescription=""
-        />
-        <Section
-          sectionTitle="New Summer Arrivals"
-          navigation={props.navigation}
-          products={images}
-          sectionDescription=""
-        />
+        {isLoading ? (
+          <View style={{paddingTop: normalizeY(24), alignItems: 'center'}}>
+            <ActivityIndicator size="small" color={colors.primary} />
+          </View>
+        ) : (
+          <>
+            <Section
+              sectionTitle="New Arrivals"
+              navigation={props.navigation}
+              products={products.list}
+              sectionDescription=""
+            />
+            <Section
+              sectionTitle="New Summer Arrivals"
+              navigation={props.navigation}
+              products={products.list}
+              sectionDescription=""
+            />
+          </>
+        )}
       </ScrollView>
     </View>
   );

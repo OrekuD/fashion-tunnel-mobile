@@ -1,82 +1,82 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import { REACT_APP_API_URL } from "@env";
+import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
+import {REACT_APP_API_URL} from '@env';
 
 const interceptorResponseFn = (
-  response: AxiosResponse<any>
+  response: AxiosResponse<any>,
 ): AxiosResponse<any> => response;
 
 const interceptorErrorFn = (error: any) => {
   if (error.response) {
-    const status = error?.response.status;
-    // console.error(error.response);
+    const status = error.response.status;
+    console.log({____error: error.response.status});
 
     if (status === 422) {
       return Promise.reject({
         status,
-        list: [{ msg: "Unprocessable Entity" }]
+        list: [{msg: 'Unprocessable Entity'}],
       });
     }
 
     if (status === 401) {
       return Promise.reject({
         status,
-        list: [{ msg: "Unauthorized" }]
+        list: [{msg: 'Unauthorized'}],
       });
     }
 
     if (status === 400) {
-      if ("data" in error.response && "validation" in error.response.data) {
+      if ('data' in error.response && 'validation' in error.response.data) {
         return Promise.reject({
           status,
-          list: [{ msg: error.response.data.validation.body.message }]
+          list: [{msg: error.response.data.validation.body.message}],
         });
       }
 
       return Promise.reject({
         status,
-        list: [{ msg: "Bad Request" }]
+        list: [{msg: 'Bad Request'}],
       });
     }
 
-    if (status === 403) {
+    if (status === 403 || status === 401) {
       return Promise.reject({
         status,
-        list: [{ msg: "Forbidden" }]
+        list: [{msg: 'Forbidden'}],
       });
     }
 
     const response = {
       status: error.response.status,
-      list: error.response.data.errors
+      list: error.response.data.errors,
     };
     return Promise.reject(response);
   } else {
     const response = {
       status: 500,
-      list: [{ msg: "Something went wrong." }]
+      list: [{msg: 'Something went wrong.'}],
     };
     return Promise.reject(response);
   }
 };
 
 class API {
-  private readonly BASE_URL: string = `${REACT_APP_API_URL}/api/v1`;
+  private readonly BASE_URL: string = `${REACT_APP_API_URL}`;
   private readonly guestAxiosInstance: AxiosInstance;
   private readonly axiosInstance: AxiosInstance;
   private isAuthenticated: boolean = false;
 
   constructor() {
-    const config: AxiosRequestConfig = { baseURL: this.BASE_URL };
+    const config: AxiosRequestConfig = {baseURL: this.BASE_URL};
     this.axiosInstance = axios.create(config);
     this.axiosInstance.interceptors.response.use(
       interceptorResponseFn,
-      interceptorErrorFn
+      interceptorErrorFn,
     );
 
     this.guestAxiosInstance = axios.create(config);
     this.guestAxiosInstance.interceptors.response.use(
       (response: AxiosResponse<any>): AxiosResponse<any> => response,
-      interceptorErrorFn
+      interceptorErrorFn,
     );
   }
 
@@ -95,7 +95,7 @@ class API {
   };
 
   public url = (path: string) => {
-    if (path.startsWith("/")) {
+    if (path.startsWith('/')) {
       return `${this.BASE_URL}${path}`;
     } else {
       return `${this.BASE_URL}/${path}`;

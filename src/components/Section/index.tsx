@@ -4,6 +4,7 @@ import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {RootStackParams} from '../../../types';
 import {images, cedi, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
+import Product from '../../models/Product';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 import CachedImage from '../CachedImage';
 import Typography from '../Typography';
@@ -13,7 +14,7 @@ const styles = StyleSheet.create({});
 interface Props {
   sectionTitle: string;
   sectionDescription: string;
-  products: Array<any>;
+  products: Array<Product>;
   navigation: StackNavigationProp<RootStackParams>;
 }
 
@@ -21,7 +22,6 @@ const Section = (props: Props) => {
   const scrollX = React.useRef(new Animated.Value(0)).current;
 
   const itemWidth = React.useMemo(() => screenwidth * 0.55, []);
-  const spacerWidth = React.useMemo(() => (screenwidth - itemWidth) / 2, []);
 
   return (
     <View style={{marginBottom: normalizeY(24)}}>
@@ -45,7 +45,7 @@ const Section = (props: Props) => {
           {useNativeDriver: false},
         )}
         showsHorizontalScrollIndicator={false}>
-        {props.products.map((uri, index) => {
+        {props.products.map((product, index) => {
           return (
             <Animated.View
               style={{
@@ -60,7 +60,7 @@ const Section = (props: Props) => {
                 }}
                 onPress={() =>
                   props.navigation.navigate('ProductScreen', {
-                    productId: '',
+                    productId: product.id,
                   })
                 }>
                 <View
@@ -72,7 +72,7 @@ const Section = (props: Props) => {
                     justifyContent: 'center',
                   }}>
                   <CachedImage
-                    source={{uri}}
+                    source={{uri: product.images[0]}}
                     style={{width: '100%', height: '100%'}}
                     resizeMode="cover"
                   />
@@ -82,27 +82,21 @@ const Section = (props: Props) => {
                   fontWeight={500}
                   style={{marginTop: normalizeY(14)}}
                   color={colors.deepgrey}>
-                  Off-White
+                  {product.name}
                 </Typography>
                 <Typography
                   variant="sm"
                   numberOfLines={2}
                   style={{marginTop: normalizeY(8)}}
                   color={colors.deepgrey}>
-                  Do consectetur ad exercitation ad minim aliquip veniam ipsum
-                  ullamco ex elit pariatur pariatur dolor. Aliquip officia
-                  consectetur qui et reprehenderit id id consectetur ex culpa.
-                  Elit fugiat irure excepteur veniam duis enim veniam elit.
-                  Deserunt eiusmod proident incididunt laboris minim dolore nisi
-                  ipsum qui proident eiusmod sint irure deserunt. Amet pariatur
-                  deserunt ea minim culpa aliqua laboris nostrud.
+                  {product.description}
                 </Typography>
                 <Typography
                   variant="sm"
                   fontWeight={500}
                   style={{marginTop: normalizeY(14)}}
                   color={colors.deepgrey}>
-                  {`${cedi}123.99`}
+                  {`${cedi} ${product.price}`}
                 </Typography>
               </TouchableOpacity>
             </Animated.View>

@@ -194,7 +194,10 @@ const ProductScreen = (props: Props) => {
                       : 'rgba(41, 37, 37, 0.2)',
                   }}
                   key={size}>
-                  <Typography variant="sm" textAlign="center">
+                  <Typography
+                    variant="sm"
+                    textAlign="center"
+                    color={colors.black}>
                     {ClothSizes.State.text(size)}
                   </Typography>
                 </TouchableOpacity>

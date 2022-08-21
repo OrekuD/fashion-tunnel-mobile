@@ -1,26 +1,78 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthenticationState } from "../types";
-import API from "../../constants/api";
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {AuthenticationState, CPA} from '../types';
+import API from '../../constants/api';
+import authenticationAsyncActions from '../actions/authentication.action';
+import postRequest from '../postRequest';
+import AuthenticationResponse from '../../network/responses/AuthenticationResponse';
+import postErrorRequest from '../postErrorRequest';
+import ErrorResponse from '../../network/responses/ErrorResponse';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import OkResponse from '../../network/responses/OkResponse';
 
 const initialState: AuthenticationState = {
   isAuthenticated: false,
-  accessToken: "",
-  expiryAt: -1
+  accessToken: '',
+  expiryAt: -1,
 };
 
 const slice = createSlice({
-  name: "authentication",
+  name: 'authentication',
   initialState,
-  reducers: {
-    signOut: () => {
-      API.removeAccessToken();
-      return initialState;
-    },
-    addAuthState: (state, action: PayloadAction<{ accessToken: string }>) => {
-      state.isAuthenticated = true;
+  reducers: {},
+  extraReducers: {
+    [authenticationAsyncActions.signin.fulfilled.type]: (
+      state,
+      action: CPA<AuthenticationResponse>,
+    ) => {
       state.accessToken = action.payload.accessToken;
-    }
-  }
+      state.isAuthenticated = true;
+      API.addAccessToken(action.payload.accessToken);
+      AsyncStorage.setItem('accessToken', action.payload.accessToken);
+      postRequest(action);
+    },
+    [authenticationAsyncActions.signup.fulfilled.type]: (
+      state,
+      action: CPA<AuthenticationResponse>,
+    ) => {
+      state.accessToken = action.payload.accessToken;
+      state.isAuthenticated = true;
+      API.addAccessToken(action.payload.accessToken);
+      AsyncStorage.setItem('accessToken', action.payload.accessToken);
+      postRequest(action);
+    },
+    [authenticationAsyncActions.signin.rejected.type]: (
+      state,
+      action: CPA<ErrorResponse>,
+    ) => {
+      state.accessToken = '';
+      state.isAuthenticated = false;
+      postErrorRequest(state, action, initialState);
+    },
+    [authenticationAsyncActions.signup.rejected.type]: (
+      state,
+      action: CPA<ErrorResponse>,
+    ) => {
+      state.accessToken = '';
+      state.isAuthenticated = false;
+      postErrorRequest(state, action, initialState);
+    },
+    [authenticationAsyncActions.signout.fulfilled.type]: (
+      state,
+      action: CPA<OkResponse>,
+    ) => {
+      state.accessToken = '';
+      state.isAuthenticated = false;
+      postRequest(action);
+    },
+    [authenticationAsyncActions.signout.rejected.type]: (
+      state,
+      action: CPA<ErrorResponse>,
+    ) => {
+      state.accessToken = '';
+      state.isAuthenticated = false;
+      postErrorRequest(state, action, initialState);
+    },
+  },
 });
 
 export const authenticationActions = slice.actions;

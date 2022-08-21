@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
-import {RootStackParams} from '../../../types';
+import {DeviceTypes, RootStackParams} from '../../../types';
 import Button from '../../components/Button';
 import {MailIcon, EyeCancelIcon, EyeIcon} from '../../components/Icons';
 import TextField from '../../components/TextField';
@@ -25,7 +25,10 @@ import {authenticationActions} from '../../store/slices/authentication.slice';
 import {userActions} from '../../store/slices/user.slice';
 import ErrorResponse from '../../network/responses/ErrorResponse';
 import colors from '../../constants/colors';
-import {screenheight} from '../../constants';
+import {isAndroid, screenheight} from '../../constants';
+import authenticationAsyncActions from '../../store/actions/authentication.action';
+import {useSelectState} from '../../store/selectors';
+import RequestManager from '../../store/request-manager';
 
 const styles = StyleSheet.create({
   container: {
@@ -48,6 +51,28 @@ const SignInScreen = (props: Props) => {
   const {top} = useSafeAreaInsets();
 
   const dispatch = useDispatch();
+  const {request} = useSelectState();
+  const [updatedAt] = React.useState(request.updatedAt);
+
+  React.useEffect(() => {
+    if (updatedAt === request.updatedAt) {
+      return;
+    }
+    const RM = new RequestManager(request, dispatch);
+
+    if (RM.isFulfilled(authenticationAsyncActions.signin.typePrefix)) {
+      RM.consume(authenticationAsyncActions.signin.typePrefix);
+      setIsLoading(false);
+      return;
+    }
+
+    if (RM.isRejected(authenticationAsyncActions.signin.typePrefix)) {
+      RM.consume(authenticationAsyncActions.signin.typePrefix);
+      setIsLoading(false);
+      setEmailError('Your credentials are invalid');
+      return;
+    }
+  }, [updatedAt, request.updatedAt]);
 
   const canProceed = React.useMemo(() => {
     if (emailError.trim().length > 0) {
@@ -56,36 +81,18 @@ const SignInScreen = (props: Props) => {
     return !isAnyEmpty([email, password]);
   }, [email, password, emailError]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!canProceed || isLoading) {
       return;
     }
     setIsLoading(true);
 
-    const payload = {
+    const payload: SignInRequest = {
       email: email.trim().toLowerCase(),
       password: password.trim(),
+      deviceType: isAndroid ? DeviceTypes.ANDROID : DeviceTypes.IOS,
     };
-    try {
-      const response = await API.client.post<
-        SignInRequest,
-        AxiosResponse<AuthenticationResponse>
-      >('/user/sign-in', payload);
-      dispatch(
-        authenticationActions.addAuthState({
-          accessToken: response.data.accessToken,
-        }),
-      );
-      dispatch(userActions.updateUser({user: response.data.user}));
-      setIsLoading(false);
-      return response.data;
-    } catch (error: any) {
-      setIsLoading(false);
-      // console.log({ error: error?.list });
-      if ((error?.list[0]?.msg as string).toLowerCase() === 'unauthorized') {
-        setEmailError('Your credentials are invalid');
-      }
-    }
+    dispatch(authenticationAsyncActions.signin(payload));
   };
 
   return (
@@ -130,7 +137,10 @@ const SignInScreen = (props: Props) => {
               placeholder: 'Password',
               secureTextEntry: !showPassword,
               value: password,
-              onChangeText: setPassword,
+              onChangeText: text => {
+                setPassword(text);
+                setEmailError('');
+              },
             }}
             rightIcon={
               <TouchableOpacity

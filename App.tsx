@@ -1,7 +1,10 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {AxiosResponse} from 'axios';
 import React from 'react';
+import {useDispatch} from 'react-redux';
 import BottomTabbar from './src/components/BottomTabbar';
 import CartScreen from './src/screens/CartScreen';
 import CategoryScreen from './src/screens/CategoryScreen';
@@ -14,8 +17,10 @@ import ProfileScreen from './src/screens/ProfileScreen';
 import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
 import SizeGuideScreen from './src/screens/SizeGuideScreen';
+import authenticationAsyncActions from './src/store/actions/authentication.action';
 import {useSelectState} from './src/store/selectors';
 import {BottomTabsParams, RootStackParams} from './types';
+import API from './src/constants/api';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();
@@ -38,6 +43,36 @@ const BottomTabNavigation = () => {
 
 const RootStackNavigation = () => {
   const {authentication} = useSelectState();
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    const launch = async () => {
+      API.client.interceptors.response.use(
+        (response: AxiosResponse<any>): AxiosResponse<any> => response,
+        (error: any) => {
+          if (error.response) {
+            if (error.response.status === 401) {
+              dispatch(authenticationAsyncActions.signout());
+            }
+          } else if (error.status) {
+            if (error.status === 401) {
+              dispatch(authenticationAsyncActions.signout());
+            }
+          }
+
+          return Promise.reject(error);
+        },
+      );
+
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (accessToken) {
+        API.addAccessToken(accessToken);
+      }
+    };
+
+    launch().then(() => {});
+  }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{

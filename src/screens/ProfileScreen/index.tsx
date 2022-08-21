@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
@@ -21,6 +22,7 @@ import {userActions} from '../../store/slices/user.slice';
 import {LogoutIcon, SettingsIcon, UserIcon} from '../../components/Icons';
 import {useSelectState} from '../../store/selectors';
 import colors from '../../constants/colors';
+import authenticationAsyncActions from '../../store/actions/authentication.action';
 
 const styles = StyleSheet.create({
   container: {
@@ -69,26 +71,13 @@ const ProfileScreen = () => {
   const {top} = useSafeAreaInsets();
   const dispatch = useDispatch();
 
-  const signOut = async () => {
+  const signOut = () => {
     if (isLoading) {
       return;
     }
     setIsLoading(true);
 
-    try {
-      const response = await API.client.get<any, AxiosResponse<OkResponse>>(
-        '/user/sign-out',
-      );
-      dispatch(authenticationActions.signOut());
-      dispatch(userActions.signOut());
-      setIsLoading(false);
-      return response.data;
-    } catch (error) {
-      dispatch(authenticationActions.signOut());
-      dispatch(userActions.signOut());
-      setIsLoading(false);
-      // console.log({ error });
-    }
+    dispatch(authenticationAsyncActions.signout());
   };
 
   return (
@@ -113,7 +102,7 @@ const ProfileScreen = () => {
             variant="h1"
             color={colors.black}
             style={{marginTop: normalizeY(6)}}>
-            {`${user.firstName} ${user.lastName}`}
+            {`${user.firstname} ${user.lastname}`}
           </Typography>
           <Typography variant="sm" color={colors.darkgrey}>
             {user.email}
@@ -140,13 +129,15 @@ const ProfileScreen = () => {
             width={normalizeY(18)}
             height={normalizeY(18)}
             color={colors.black}
+            style={{marginRight: normalizeX(12)}}
           />
-          <Typography
-            variant="h1"
-            color={colors.black}
-            style={{marginLeft: normalizeX(12)}}>
-            Log out
-          </Typography>
+          {isLoading ? (
+            <ActivityIndicator size="small" color={colors.black} />
+          ) : (
+            <Typography variant="h1" color={colors.black}>
+              Log out
+            </Typography>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>

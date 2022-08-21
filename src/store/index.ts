@@ -1,27 +1,35 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { configureStore, EnhancedStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { CombinedState, combineReducers } from "redux";
-import API from "../constants/api";
-import authentication from "./slices/authentication.slice";
-import user from "./slices/user.slice";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {configureStore, EnhancedStore} from '@reduxjs/toolkit';
+import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
+import {CombinedState, combineReducers} from 'redux';
+import API from '../constants/api';
+import authentication from './slices/authentication.slice';
+import user from './slices/user.slice';
+import cart from './slices/cart.slice';
+import products from './slices/products.slice';
+import favourites from './slices/favourites.slice';
+import request from './slices/request.slice';
 
 const reducers = {
   authentication,
-  user
+  user,
+  cart,
+  products,
+  favourites,
+  request,
 };
 
 const rootReducer = combineReducers(reducers);
 
 // This middleware will just add the property "async dispatch" to all actions
 // @ts-ignore
-const asyncDispatchMiddleware = (store) => (next) => (action) => {
+const asyncDispatchMiddleware = store => next => action => {
   let syncActivityFinished = false;
   let actionQueue: Array<any> = [];
 
   function flushQueue() {
     try {
-      actionQueue.forEach((a) => store.dispatch(a));
+      actionQueue.forEach(a => store.dispatch(a));
     } catch (e) {
       // Ignore
     } // flush queue
@@ -37,7 +45,7 @@ const asyncDispatchMiddleware = (store) => (next) => (action) => {
   }
 
   const actionWithAsyncDispatch = Object.assign({}, action, {
-    dispatch
+    dispatch,
   });
 
   const res = next(actionWithAsyncDispatch);
@@ -51,28 +59,29 @@ const asyncDispatchMiddleware = (store) => (next) => (action) => {
 const initializeStore = async () => {
   let preloadedState: any = {};
 
-  const state = await AsyncStorage.getItem("state");
+  const state = await AsyncStorage.getItem('state');
   if (state) {
     preloadedState = JSON.parse(state);
-    if (preloadedState && preloadedState.hasOwnProperty("authentication")) {
+    if (preloadedState && preloadedState.hasOwnProperty('authentication')) {
       API.addAccessToken(preloadedState.authentication.accessToken);
     }
   }
 
-  const createDebugger = require("redux-flipper").default;
+  const createDebugger = require('redux-flipper').default;
 
   const store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) =>
+    middleware: getDefaultMiddleware =>
       getDefaultMiddleware().concat(asyncDispatchMiddleware, createDebugger()),
     // devTools: process?.env?.NODE_ENV === 'development',
     devTools: true,
-    preloadedState
+    preloadedState,
   });
 
   store.subscribe(async () => {
     const state = store.getState();
-    await AsyncStorage.setItem("state", JSON.stringify(state));
+    const {request, ...rest} = state;
+    await AsyncStorage.setItem('state', JSON.stringify(rest));
   });
 
   return store;

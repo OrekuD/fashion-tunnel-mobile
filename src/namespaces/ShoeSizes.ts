@@ -1,4 +1,4 @@
-namespace ClothSize {
+namespace ShoeSizes {
   export enum Status {
     XXS = 0,
     XS = 1,
@@ -31,4 +31,4 @@ namespace ClothSize {
   }
 }
 
-export default ClothSize;
+export default ShoeSizes;
