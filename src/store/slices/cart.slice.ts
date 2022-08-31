@@ -9,7 +9,7 @@ const initialState: CartState = {
   products: [],
   total: 0,
   subtotal: 0,
-  discountPercentage: 0,
+  discountPercentage: 0.2,
 };
 
 const slice = createSlice({

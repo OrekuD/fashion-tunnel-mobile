@@ -42,7 +42,7 @@ const BottomTabNavigation = () => {
 };
 
 const RootStackNavigation = () => {
-  const {authentication} = useSelectState();
+  const {authentication, ui} = useSelectState();
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -89,7 +89,12 @@ const RootStackNavigation = () => {
         </>
       ) : (
         <>
-          <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
+          {ui.isFirstLaunch && (
+            <Stack.Screen
+              name="OnboardingScreen"
+              component={OnboardingScreen}
+            />
+          )}
           <Stack.Screen name="SignInScreen" component={SignInScreen} />
           <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
         </>

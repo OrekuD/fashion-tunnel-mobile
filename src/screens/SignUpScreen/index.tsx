@@ -88,8 +88,7 @@ const SignUpScreen = (props: Props) => {
       <KeyboardAvoidingView style={{flex: 1}} behavior="height">
         <ScrollView
           contentContainerStyle={{
-            flex: 1,
-            paddingTop: normalizeY(24) + top,
+            paddingTop: normalizeY(120) + top,
           }}
           style={{backgroundColor: colors.white}}>
           <View style={styles.container}>

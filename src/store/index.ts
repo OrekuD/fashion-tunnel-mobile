@@ -9,6 +9,7 @@ import cart from './slices/cart.slice';
 import products from './slices/products.slice';
 import favourites from './slices/favourites.slice';
 import request from './slices/request.slice';
+import ui from './slices/ui.slice';
 
 const reducers = {
   authentication,
@@ -17,6 +18,7 @@ const reducers = {
   products,
   favourites,
   request,
+  ui,
 };
 
 const rootReducer = combineReducers(reducers);

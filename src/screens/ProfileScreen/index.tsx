@@ -19,7 +19,12 @@ import {AxiosResponse} from 'axios';
 import ErrorResponse from '../../network/responses/ErrorResponse';
 import {authenticationActions} from '../../store/slices/authentication.slice';
 import {userActions} from '../../store/slices/user.slice';
-import {LogoutIcon, SettingsIcon, UserIcon} from '../../components/Icons';
+import {
+  ChevronRightIcon,
+  LogoutIcon,
+  SettingsIcon,
+  UserIcon,
+} from '../../components/Icons';
 import {useSelectState} from '../../store/selectors';
 import colors from '../../constants/colors';
 import authenticationAsyncActions from '../../store/actions/authentication.action';
@@ -34,33 +39,13 @@ const styles = StyleSheet.create({
   },
   rowItem: {
     width: '100%',
-    height: normalizeY(50),
-    borderRadius: normalizeY(6),
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: normalizeX(16),
-    shadowColor: colors.grey,
-    shadowOffset: {width: 1, height: 1},
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    marginBottom: normalizeY(14),
+    justifyContent: 'space-between',
+    paddingVertical: normalizeY(12),
     backgroundColor: colors.white,
-  },
-  profile: {
-    width: '100%',
-    height: normalizeY(150),
-    borderRadius: normalizeY(12),
-    shadowColor: colors.grey,
-    shadowOffset: {width: 1, height: 1},
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    backgroundColor: colors.white,
-    marginTop: normalizeY(24),
-    padding: normalizeY(16),
-    marginBottom: normalizeY(24),
+    borderBottomColor: colors.lightgrey,
+    borderBottomWidth: 1,
   },
 });
 
@@ -79,66 +64,73 @@ const ProfileScreen = () => {
 
     dispatch(authenticationAsyncActions.signout());
   };
+  const settings = React.useMemo(
+    () => [
+      {
+        label: 'Orders',
+        onPress: () => {},
+      },
+      {
+        label: 'Account Details',
+        onPress: () => {},
+      },
+      {
+        label: 'Address Book',
+        onPress: () => {},
+      },
+    ],
+    [],
+  );
 
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior="height">
       <ScrollView
         contentContainerStyle={{
-          flex: 1,
           paddingTop: normalizeY(24) + top,
           paddingHorizontal: normalizeX(24),
         }}
         style={{backgroundColor: colors.white}}>
-        <Typography variant="h2" color={colors.primary} fontWeight={600}>
-          ProfileScreen
+        <Typography
+          variant="h2"
+          fontWeight={500}
+          style={{textTransform: 'capitalize'}}>
+          {user.firstname}
         </Typography>
-        <View style={styles.profile}>
-          <UserIcon
-            width={normalizeY(42)}
-            height={normalizeY(42)}
-            color={colors.darkgrey}
-          />
-          <Typography
-            variant="h1"
-            color={colors.black}
-            style={{marginTop: normalizeY(6)}}>
-            {`${user.firstname} ${user.lastname}`}
-          </Typography>
-          <Typography variant="sm" color={colors.darkgrey}>
-            {user.email}
-          </Typography>
-        </View>
-        <TouchableOpacity activeOpacity={0.8} style={styles.rowItem}>
-          <SettingsIcon
-            width={normalizeY(18)}
-            height={normalizeY(18)}
-            color={colors.black}
-          />
-          <Typography
-            variant="h1"
-            color={colors.black}
-            style={{marginLeft: normalizeX(12)}}>
-            Settings
-          </Typography>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.rowItem}
-          onPress={signOut}>
-          <LogoutIcon
-            width={normalizeY(18)}
-            height={normalizeY(18)}
-            color={colors.black}
-            style={{marginRight: normalizeX(12)}}
-          />
-          {isLoading ? (
-            <ActivityIndicator size="small" color={colors.black} />
-          ) : (
-            <Typography variant="h1" color={colors.black}>
+        <View style={{paddingTop: normalizeY(60)}}>
+          {settings.map(({label, onPress}, index) => (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.rowItem}
+              key={index}
+              onPress={onPress}>
+              <Typography variant="sm" color={colors.black}>
+                {label}
+              </Typography>
+              <ChevronRightIcon
+                width={normalizeY(18)}
+                height={normalizeY(18)}
+                color={colors.black}
+              />
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.rowItem}
+            onPress={signOut}>
+            <Typography variant="sm" color={colors.black}>
               Log out
             </Typography>
-          )}
-        </TouchableOpacity>
+            {isLoading ? (
+              <ActivityIndicator size="small" color={colors.black} />
+            ) : (
+              <ChevronRightIcon
+                width={normalizeY(18)}
+                height={normalizeY(18)}
+                color={colors.black}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );

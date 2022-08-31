@@ -27,6 +27,7 @@ import {
   HeartIcon,
   MinusIcon,
   PlusIcon,
+  TrashIcon,
 } from '../../components/Icons';
 import Typography from '../../components/Typography';
 import {cedi, isAndroid, screenheight, screenwidth} from '../../constants';
@@ -549,12 +550,24 @@ const ProductScreen = (props: Props) => {
             );
           }
         }}
-        style={{...styles.cartButton, bottom: bottom}}>
-        <BagIcon
-          width={normalizeY(24)}
-          height={normalizeY(24)}
-          color={colors.white}
-        />
+        style={{
+          ...styles.cartButton,
+          bottom: bottom,
+          backgroundColor: isItemInCart ? colors.error : colors.deepgrey,
+        }}>
+        {isItemInCart ? (
+          <TrashIcon
+            width={normalizeY(24)}
+            height={normalizeY(24)}
+            color={colors.white}
+          />
+        ) : (
+          <BagIcon
+            width={normalizeY(24)}
+            height={normalizeY(24)}
+            color={colors.white}
+          />
+        )}
       </TouchableOpacity>
       <View
         style={{

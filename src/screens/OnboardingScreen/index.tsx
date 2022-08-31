@@ -19,6 +19,7 @@ import {ArrowRightIcon, Logo} from '../../components/Icons';
 import Typography from '../../components/Typography';
 import {screenheight, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
+import {uiActions} from '../../store/slices/ui.slice';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 
 const slides = [
@@ -151,6 +152,7 @@ const OnboardingScreen = (props: Props) => {
 
   const handleNext = () => {
     if (slideIndex === 2) {
+      dispatch(uiActions.disableOnboarding());
       props.navigation.navigate('SignUpScreen');
     } else {
       setSlideIndex(slideIndex + 1);
