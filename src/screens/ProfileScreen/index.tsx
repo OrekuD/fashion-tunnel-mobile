@@ -72,7 +72,7 @@ const ProfileScreen = (props: Props) => {
     () => [
       {
         label: 'Orders',
-        onPress: () => {},
+        onPress: () => props.navigation.navigate('AddressBookScreen'),
       },
       {
         label: 'Account Details',
@@ -80,7 +80,7 @@ const ProfileScreen = (props: Props) => {
       },
       {
         label: 'Address Book',
-        onPress: () => {},
+        onPress: () => props.navigation.navigate('AddressBookScreen'),
       },
     ],
     [],

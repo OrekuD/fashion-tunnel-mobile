@@ -11,6 +11,7 @@ const colors = {
   deepgrey: '#292525',
   lightgrey: '#F5F4F5',
   lightergrey: '#E9E9E9',
+  blue: '#3561FD',
 };
 
 export default colors;

@@ -23,6 +23,9 @@ import {BottomTabsParams, RootStackParams} from './types';
 import API from './src/constants/api';
 import ChangePasswordScreen from './src/screens/ChangePasswordScreen';
 import ChangeDetailsScreen from './src/screens/ChangeDetailsScreen';
+import AddressBookScreen from './src/screens/AddressBookScreen';
+import AddNewAddressScreen from './src/screens/AddNewAddressScreen';
+import EditAddressScreen from './src/screens/EditAddressScreen';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();
@@ -88,6 +91,18 @@ const RootStackNavigation = () => {
           <Stack.Screen name="ProductScreen" component={ProductScreen} />
           <Stack.Screen name="SizeGuideScreen" component={SizeGuideScreen} />
           <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
+          <Stack.Screen
+            name="EditAddressScreen"
+            component={EditAddressScreen}
+          />
+          <Stack.Screen
+            name="AddNewAddressScreen"
+            component={AddNewAddressScreen}
+          />
+          <Stack.Screen
+            name="AddressBookScreen"
+            component={AddressBookScreen}
+          />
           <Stack.Screen
             name="ChangePasswordScreen"
             component={ChangePasswordScreen}

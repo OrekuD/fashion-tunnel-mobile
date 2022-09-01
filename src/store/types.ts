@@ -1,6 +1,7 @@
 import {PayloadAction} from '@reduxjs/toolkit';
 import {CartProduct} from '../../types';
 import Product from '../models/Product';
+import UserAddress from '../models/UserAddress';
 
 export interface AuthenticationState {
   isAuthenticated: boolean;
@@ -18,6 +19,10 @@ export interface CartState {
 
 export interface ProductsState {
   list: Array<Product>;
+}
+
+export interface UserAddressState {
+  list: Array<UserAddress>;
 }
 
 export interface FavouritesState {

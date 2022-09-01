@@ -11,6 +11,9 @@ export type RootStackParams = {
   CartScreen: undefined;
   ChangeDetailsScreen: undefined;
   ChangePasswordScreen: undefined;
+  AddressBookScreen: undefined;
+  AddNewAddressScreen: undefined;
+  EditAddressScreen: {userAddressId: string};
   CategoryScreen: {categoryTitle: string; categoryId: string};
   ProductScreen: {productId: string};
   SizeGuideScreen: {productId: string};

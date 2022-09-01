@@ -75,7 +75,6 @@ const ChangeDetailsScreen = (props: Props) => {
       RM.consume(userAsyncActions.updateDetails.typePrefix);
       setIsLoading(false);
       const error = RM.getRequest(userAsyncActions.updateDetails.typePrefix);
-      console.log({error});
       if (error?.payload.status === 409) {
         setEmailError('E-mail is taken');
       } else {
