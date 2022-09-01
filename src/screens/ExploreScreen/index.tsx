@@ -137,6 +137,8 @@ const ExploreScreen = (props: Props) => {
         />
       </View>
       <TextField
+        name=""
+        rounded
         leftIcon={
           <SearchIcon
             width={normalizeY(24)}

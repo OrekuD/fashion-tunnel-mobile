@@ -28,6 +28,8 @@ import {
 import {useSelectState} from '../../store/selectors';
 import colors from '../../constants/colors';
 import authenticationAsyncActions from '../../store/actions/authentication.action';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootStackParams} from '../../../types';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,7 +51,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfileScreen = () => {
+interface Props extends StackScreenProps<RootStackParams, 'MainScreen'> {}
+
+const ProfileScreen = (props: Props) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const {user} = useSelectState();
 
@@ -72,7 +76,7 @@ const ProfileScreen = () => {
       },
       {
         label: 'Account Details',
-        onPress: () => {},
+        onPress: () => props.navigation.navigate('ChangeDetailsScreen'),
       },
       {
         label: 'Address Book',

@@ -13,10 +13,18 @@ import {normalizeX, normalizeY} from '../../utils/normalize';
 import Typography from '../Typography';
 
 const styles = StyleSheet.create({
-  container: {
+  roundedContainer: {
     width: screenwidth - normalizeX(48),
     height: normalizeY(60),
     borderRadius: normalizeY(60 / 2),
+    backgroundColor: colors.deepgrey,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  flatContainer: {
+    width: screenwidth - normalizeX(48),
+    height: normalizeY(48),
+    borderRadius: normalizeY(4),
     backgroundColor: colors.deepgrey,
     alignItems: 'center',
     justifyContent: 'center',
@@ -29,15 +37,40 @@ interface Props {
   isLoading?: boolean;
   isDisabled?: boolean;
   style?: ViewStyle;
+  variant: 'rounded' | 'flat' | 'transparent';
 }
 
 const Button = (props: Props) => {
+  if (props.variant === 'flat') {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={props.onPress}
+        style={{
+          ...styles.flatContainer,
+          backgroundColor:
+            props.isDisabled || props.isLoading
+              ? 'rgba(41, 37, 37, 0.5)'
+              : colors.deepgrey,
+          ...props.style,
+        }}
+        disabled={props.isDisabled}>
+        {props.isLoading ? (
+          <ActivityIndicator size="small" color={colors.white} />
+        ) : (
+          <Typography variant="sm" color="white" style={{fontWeight: '600'}}>
+            {props.label}
+          </Typography>
+        )}
+      </TouchableOpacity>
+    );
+  }
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={props.onPress}
       style={{
-        ...styles.container,
+        ...styles.roundedContainer,
         backgroundColor:
           props.isDisabled || props.isLoading
             ? 'rgba(41, 37, 37, 0.5)'

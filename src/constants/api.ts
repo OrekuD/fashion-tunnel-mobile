@@ -8,7 +8,6 @@ const interceptorResponseFn = (
 const interceptorErrorFn = (error: any) => {
   if (error.response) {
     const status = error.response.status;
-    // console.log({____error: error.response.status});
 
     if (status === 422) {
       return Promise.reject({
@@ -24,26 +23,33 @@ const interceptorErrorFn = (error: any) => {
       });
     }
 
-    if (status === 400) {
-      if ('data' in error.response && 'validation' in error.response.data) {
-        return Promise.reject({
-          status,
-          list: [{msg: error.response.data.validation.body.message}],
-        });
-      }
-
+    if (status === 409) {
       return Promise.reject({
         status,
-        list: [{msg: 'Bad Request'}],
+        list: [{msg: 'Resource already taken'}],
       });
     }
 
-    if (status === 403 || status === 401) {
-      return Promise.reject({
-        status,
-        list: [{msg: 'Forbidden'}],
-      });
-    }
+    // if (status === 400) {
+    //   if ('data' in error.response && 'validation' in error.response.data) {
+    //     return Promise.reject({
+    //       status,
+    //       list: [{msg: error.response.data.validation.body.message}],
+    //     });
+    //   }
+
+    //   return Promise.reject({
+    //     status,
+    //     list: [{msg: 'Bad Request'}],
+    //   });
+    // }
+
+    // if (status === 403 || status === 401) {
+    //   return Promise.reject({
+    //     status,
+    //     list: [{msg: 'Forbidden'}],
+    //   });
+    // }
 
     const response = {
       status: error.response.status,

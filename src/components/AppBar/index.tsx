@@ -80,11 +80,6 @@ const AppBar = (props: Props) => {
           </Typography>
         )}
       </View>
-      {/* <ChevronRightIcon
-        width={normalizeY(24)}
-        height={normalizeY(24)}
-        color={colors.black}
-      /> */}
     </View>
   );
 };

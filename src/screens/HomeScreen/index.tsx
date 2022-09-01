@@ -136,6 +136,8 @@ const HomeScreen = (props: Props) => {
           <View style={{...styles.row, marginBottom: normalizeY(12)}}>
             <View style={{flex: 1, marginRight: normalizeX(12)}}>
               <TextField
+                name=""
+                rounded
                 containerStyle={{
                   marginBottom: 0,
                 }}

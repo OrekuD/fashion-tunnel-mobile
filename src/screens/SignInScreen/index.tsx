@@ -113,8 +113,9 @@ const SignInScreen = (props: Props) => {
             Welcome back
           </Typography>
           <TextField
+            name="E-mail"
             textInputProps={{
-              placeholder: 'Email',
+              placeholder: 'Enter your e-mail',
               keyboardType: 'email-address',
               value: email,
               onChangeText: text => {
@@ -133,8 +134,9 @@ const SignInScreen = (props: Props) => {
             error={emailError}
           />
           <TextField
+            name="Password"
             textInputProps={{
-              placeholder: 'Password',
+              placeholder: 'Enter your password',
               secureTextEntry: !showPassword,
               value: password,
               onChangeText: text => {
@@ -182,6 +184,7 @@ const SignInScreen = (props: Props) => {
           </Typography>
           <Button
             label="Sign in"
+            variant="rounded"
             onPress={handleSubmit}
             isDisabled={isLoading || !canProceed}
             isLoading={isLoading}

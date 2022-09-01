@@ -9,6 +9,8 @@ export type RootStackParams = {
   SignUpScreen: undefined;
   MainScreen: undefined;
   CartScreen: undefined;
+  ChangeDetailsScreen: undefined;
+  ChangePasswordScreen: undefined;
   CategoryScreen: {categoryTitle: string; categoryId: string};
   ProductScreen: {productId: string};
   SizeGuideScreen: {productId: string};

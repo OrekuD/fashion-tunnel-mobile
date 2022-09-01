@@ -258,7 +258,7 @@ const CartScreen = (props: Props) => {
           //   backgroundColor: 'red',
           justifyContent: 'flex-end',
         }}>
-        <Button label="Checkout" onPress={() => {}} />
+        <Button label="Checkout" variant="rounded" onPress={() => {}} />
       </LinearGradient>
     </>
   );

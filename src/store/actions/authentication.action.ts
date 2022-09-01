@@ -57,12 +57,12 @@ const signout = createAsyncThunk(
       const response = await API.client.get<any, AxiosResponse<OkResponse>>(
         '/user/sign-out',
       );
-      console.log({response: response.data});
+      // console.log({response: response.data});
       thunkApi.dispatch(requestActions.beforeFulfilled(signout.typePrefix));
 
       return response.data;
     } catch (error) {
-      console.log({error: error});
+      // console.log({error: error});
       thunkApi.dispatch(requestActions.beforeRejected(signout.typePrefix));
       return thunkApi.rejectWithValue({error});
     }

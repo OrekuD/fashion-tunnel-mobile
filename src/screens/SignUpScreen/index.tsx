@@ -101,8 +101,9 @@ const SignUpScreen = (props: Props) => {
               Create a new account
             </Typography>
             <TextField
+              name="First name"
               textInputProps={{
-                placeholder: 'First name',
+                placeholder: 'Enter your first name',
                 value: firstName,
                 onChangeText: setFirstName,
                 autoCapitalize: 'none',
@@ -116,8 +117,9 @@ const SignUpScreen = (props: Props) => {
               }
             />
             <TextField
+              name="First name"
               textInputProps={{
-                placeholder: 'Last name',
+                placeholder: 'Enter your last name',
                 value: lastName,
                 onChangeText: setLastName,
                 autoCapitalize: 'none',
@@ -131,8 +133,9 @@ const SignUpScreen = (props: Props) => {
               }
             />
             <TextField
+              name="E-mail"
               textInputProps={{
-                placeholder: 'Email',
+                placeholder: 'Enter your e-mail',
                 keyboardType: 'email-address',
                 value: email,
                 onChangeText: text => {
@@ -151,9 +154,10 @@ const SignUpScreen = (props: Props) => {
               error={emailError}
             />
             <TextField
+              name="Password"
               textInputProps={{
-                placeholder: 'Password',
-                secureTextEntry: !showPassword,
+                placeholder: 'Enter your password',
+                secureTextEntry: showPassword,
                 value: password,
                 onChangeText: setPassword,
               }}
@@ -161,7 +165,7 @@ const SignUpScreen = (props: Props) => {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => setShowPassword(!showPassword)}>
-                  {!showPassword ? (
+                  {showPassword ? (
                     <EyeCancelIcon
                       width={normalizeY(24)}
                       height={normalizeY(24)}
@@ -197,6 +201,7 @@ const SignUpScreen = (props: Props) => {
             </Typography>
             <Button
               label="Create account"
+              variant="rounded"
               onPress={handleSubmit}
               isDisabled={isLoading || !canProceed}
               isLoading={isLoading}
