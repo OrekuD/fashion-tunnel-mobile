@@ -121,7 +121,7 @@ const CategoryScreen = (props: Props) => {
   });
   return (
     <>
-      <AppBar title="T-Shirt" />
+      <AppBar title={ProductCategories.State.text(selectedCategoryId)} />
       <Animated.View
         style={[
           styles.categories,

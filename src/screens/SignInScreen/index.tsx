@@ -100,7 +100,7 @@ const SignInScreen = (props: Props) => {
       <ScrollView
         contentContainerStyle={{
           // flex: 1,
-          paddingTop: normalizeY(24) + top + screenheight * 0.2,
+          paddingTop: normalizeY(24) + top + screenheight * 0.15,
         }}
         style={{backgroundColor: colors.white}}>
         <View style={styles.container}>

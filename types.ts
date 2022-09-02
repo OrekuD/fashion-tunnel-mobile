@@ -19,7 +19,7 @@ export type RootStackParams = {
   OrdersScreen: undefined;
   OrderScreen: {orderId: string};
   EditAddressScreen: {userAddressId: string};
-  CategoryScreen: {categoryTitle: string; categoryId: ProductCategories.Status};
+  CategoryScreen: {categoryId: ProductCategories.Status};
   ProductScreen: {productId: string};
   SizeGuideScreen: {productId: string};
 };

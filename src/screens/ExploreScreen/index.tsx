@@ -159,7 +159,6 @@ const ExploreScreen = (props: Props) => {
             onPress={() =>
               props.navigation.navigate('CategoryScreen', {
                 categoryId: id,
-                categoryTitle: '',
               })
             }
             key={index}>

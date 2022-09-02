@@ -91,7 +91,7 @@ const BottomTabbar = (props: BottomTabBarProps) => {
       {
         icon: HeartIcon,
         route: 'FavouritesScreen',
-        label: 'Likes',
+        label: 'Wishlist',
       },
       {
         icon: UserIcon,
