@@ -26,6 +26,9 @@ import ChangeDetailsScreen from './src/screens/ChangeDetailsScreen';
 import AddressBookScreen from './src/screens/AddressBookScreen';
 import AddNewAddressScreen from './src/screens/AddNewAddressScreen';
 import EditAddressScreen from './src/screens/EditAddressScreen';
+import CheckoutScreen from './src/screens/CheckoutScreen';
+import OrderScreen from './src/screens/OrderScreen';
+import FavouritesScreen from './src/screens/FavouritesScreen';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();
@@ -40,7 +43,7 @@ const BottomTabNavigation = () => {
       tabBar={props => <BottomTabbar {...props} />}>
       <BottomTab.Screen name="HomeScreen" component={HomeScreen} />
       <BottomTab.Screen name="ExploreScreen" component={ExploreScreen} />
-      <BottomTab.Screen name="OrdersScreen" component={OrdersScreen} />
+      <BottomTab.Screen name="FavouritesScreen" component={FavouritesScreen} />
       <BottomTab.Screen name="ProfileScreen" component={ProfileScreen} />
     </BottomTab.Navigator>
   );
@@ -91,6 +94,9 @@ const RootStackNavigation = () => {
           <Stack.Screen name="ProductScreen" component={ProductScreen} />
           <Stack.Screen name="SizeGuideScreen" component={SizeGuideScreen} />
           <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
+          <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
+          <Stack.Screen name="OrderScreen" component={OrderScreen} />
+          <Stack.Screen name="OrdersScreen" component={OrdersScreen} />
           <Stack.Screen
             name="EditAddressScreen"
             component={EditAddressScreen}

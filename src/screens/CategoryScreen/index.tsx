@@ -24,6 +24,7 @@ import Typography from '../../components/Typography';
 import {images, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
 import ProductCategories from '../../namespaces/ProductCategories';
+import {useSelectState} from '../../store/selectors';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 
 const TAB_HEIGHT = 70;
@@ -58,8 +59,29 @@ const CategoryScreen = (props: Props) => {
   const lastContentOffset = useSharedValue(0);
   const isScrolling = useSharedValue(false);
   const translateY = useSharedValue(0);
+  const {products} = useSelectState();
   const [selectedCategoryId, setSelectedCategoryId] =
-    React.useState<ProductCategories.Status>(-1);
+    React.useState<ProductCategories.Status>(props.route.params.categoryId);
+
+  const categoryProducts = React.useMemo(
+    () =>
+      products.list.filter(
+        ({productCategory}) => productCategory === selectedCategoryId,
+      ),
+    [products.list, selectedCategoryId],
+  );
+
+  React.useEffect(() => {
+    // console.log({
+    //   catIds: products.list.map(({productCategory}) => productCategory),
+    //   ids: ProductCategories.State.list(),
+    // });
+    // console.log({
+    //   p: products.list.filter(
+    //     ({productCategory}) => productCategory === selectedCategoryId,
+    //   ),
+    // });
+  }, []);
 
   const categoriesStyle = useAnimatedStyle(() => {
     return {
@@ -131,7 +153,8 @@ const CategoryScreen = (props: Props) => {
             paddingRight: normalizeX(24),
           }}>
           {ProductCategories.State.list().map((productCategory, index) => {
-            const isActiveCategory = index === selectedCategoryId;
+            const isActiveCategory = selectedCategoryId === productCategory;
+            // console.log({productCategory, selectedCategoryId});
             return (
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -141,14 +164,8 @@ const CategoryScreen = (props: Props) => {
                     ? 'rgba(41, 37, 37, 0.05)'
                     : colors.white,
                 }}
-                onPress={() => {
-                  if (isActiveCategory) {
-                    setSelectedCategoryId(-1);
-                  } else {
-                    setSelectedCategoryId(index);
-                  }
-                }}
-                key={productCategory}>
+                onPress={() => setSelectedCategoryId(productCategory)}
+                key={index}>
                 <Typography variant="sm">
                   {ProductCategories.State.text(productCategory)}
                 </Typography>
@@ -158,23 +175,33 @@ const CategoryScreen = (props: Props) => {
         </ScrollView>
       </Animated.View>
       <Animated.FlatList
-        data={Array(20).fill('8')}
+        data={categoryProducts}
         numColumns={2}
         scrollEventThrottle={16}
         onScroll={scrollHandler}
+        ListEmptyComponent={
+          <View
+            style={{
+              paddingTop: normalizeY(120),
+            }}>
+            <Typography variant="sm" color={colors.deepgrey} textAlign="center">
+              No products for this category
+            </Typography>
+          </View>
+        }
         style={{backgroundColor: colors.white}}
         contentContainerStyle={{
           paddingHorizontal: normalizeX(18),
-          paddingTop: TAB_HEIGHT,
+          paddingTop: TAB_HEIGHT + normalizeY(12),
           paddingBottom: bottom,
         }}
         columnWrapperStyle={{width: '100%', justifyContent: 'space-between'}}
         keyExtractor={() => Math.random().toString()}
         renderItem={({item}) => (
           <ProductCard
-            product={''}
+            product={item}
             onPress={() =>
-              props.navigation.navigate('ProductScreen', {productId: ''})
+              props.navigation.navigate('ProductScreen', {productId: item.id})
             }
           />
         )}

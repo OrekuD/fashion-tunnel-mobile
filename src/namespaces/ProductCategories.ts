@@ -4,6 +4,8 @@ namespace ProductCategories {
     SHOES = 1,
     HOODIE = 2,
     DRESSES = 3,
+    TROUSERS = 4,
+    JACKET = 5,
   }
 
   export class State {
@@ -12,6 +14,8 @@ namespace ProductCategories {
       [Status.SHOES]: 'Shoes',
       [Status.HOODIE]: 'Hoodie',
       [Status.DRESSES]: 'Dresses',
+      [Status.TROUSERS]: 'Trousers',
+      [Status.JACKET]: 'Jacket',
     };
 
     public static list = () =>

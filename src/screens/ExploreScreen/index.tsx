@@ -17,6 +17,7 @@ import TextField from '../../components/TextField';
 import LinearGradient from 'react-native-linear-gradient';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParams} from '../../../types';
+import ProductCategories from '../../namespaces/ProductCategories';
 
 const styles = StyleSheet.create({
   header: {
@@ -83,27 +84,26 @@ const ExploreScreen = (props: Props) => {
   const categories = React.useMemo(
     () => [
       {
+        id: ProductCategories.Status.TSHIRT,
         name: 't-shirt',
         productsLength: 3,
         uri: 'https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8c2hpcnR8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
       },
       {
+        id: ProductCategories.Status.SHOES,
         name: 'shoes',
         productsLength: 3,
         uri: 'https://images.unsplash.com/photo-1603808033192-082d6919d3e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTR8fHNob2VzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
       },
       {
+        id: ProductCategories.Status.HOODIE,
         name: 'hoodie',
         productsLength: 3,
         uri: 'https://images.unsplash.com/photo-1620799140188-3b2a02fd9a77?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8aG9vZGllfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=900&q=60',
       },
       {
-        name: 't-shirt',
-        productsLength: 3,
-        uri: 'https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8c2hpcnR8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
-      },
-      {
-        name: 't-shirt',
+        id: ProductCategories.Status.DRESSES,
+        name: 'dresses',
         productsLength: 3,
         uri: 'https://images.unsplash.com/photo-1603252109303-2751441dd157?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8c2hpcnR8ZW58MHx8MHx8&auto=format&fit=crop&w=900&q=60',
       },
@@ -152,13 +152,13 @@ const ExploreScreen = (props: Props) => {
         }}
       />
       <View style={{marginTop: normalizeY(8)}}>
-        {categories.map(({name, productsLength, uri}, index) => (
+        {categories.map(({name, productsLength, uri, id}, index) => (
           <TouchableOpacity
             style={styles.category}
             activeOpacity={0.9}
             onPress={() =>
               props.navigation.navigate('CategoryScreen', {
-                categoryId: '',
+                categoryId: id,
                 categoryTitle: '',
               })
             }

@@ -14,7 +14,7 @@ import {BottomTabsParams} from '../../types';
 import {screenwidth} from '../constants';
 import colors from '../constants/colors';
 import {normalizeX, normalizeY} from '../utils/normalize';
-import {CartIcon, ExploreIcon, HomeIcon, UserIcon} from './Icons';
+import {CartIcon, ExploreIcon, HeartIcon, HomeIcon, UserIcon} from './Icons';
 import Typography from './Typography';
 
 const styles = StyleSheet.create({
@@ -89,9 +89,9 @@ const BottomTabbar = (props: BottomTabBarProps) => {
         label: 'Explore',
       },
       {
-        icon: CartIcon,
-        route: 'OrdersScreen',
-        label: 'Orders',
+        icon: HeartIcon,
+        route: 'FavouritesScreen',
+        label: 'Likes',
       },
       {
         icon: UserIcon,

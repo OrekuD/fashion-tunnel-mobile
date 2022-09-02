@@ -1,5 +1,5 @@
 import {CPA, UserAddressState} from '../types';
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import postRequest from '../postRequest';
 import postErrorRequest from '../postErrorRequest';
 import userAddressAsyncActions from '../actions/userAddress.action';
@@ -9,6 +9,7 @@ import authenticationAsyncActions from '../actions/authentication.action';
 
 const initialState: UserAddressState = {
   list: [],
+  activeAddressId: '',
 };
 
 const slice = createSlice({
@@ -16,6 +17,12 @@ const slice = createSlice({
   initialState,
   reducers: {
     clear: () => initialState,
+    setActiveAddress: (
+      state,
+      action: PayloadAction<{userAddressId: string}>,
+    ) => {
+      state.activeAddressId = action.payload.userAddressId;
+    },
   },
   extraReducers: {
     [userAddressAsyncActions.index.fulfilled.type]: (

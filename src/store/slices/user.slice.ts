@@ -18,9 +18,7 @@ const initialState: User = {
 const slice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    signOut: () => initialState,
-  },
+  reducers: {},
   extraReducers: {
     [userAsyncActions.updateDetails.fulfilled.type]: (
       state,
@@ -79,6 +77,8 @@ const slice = createSlice({
     ) => {
       postErrorRequest(state, action, initialState);
     },
+    [authenticationAsyncActions.signout.fulfilled.type]: () => initialState,
+    [authenticationAsyncActions.signout.rejected.type]: () => initialState,
   },
 });
 

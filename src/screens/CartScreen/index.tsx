@@ -12,6 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
 import {RootStackParams} from '../../../types';
+import AppBar from '../../components/AppBar';
 import BackButton from '../../components/BackButton';
 import Button from '../../components/Button';
 import CachedImage from '../../components/CachedImage';
@@ -54,6 +55,8 @@ const styles = StyleSheet.create({
   summary: {
     width: '100%',
     paddingVertical: normalizeY(12),
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightergrey,
     // height: normalizeY(200),
     // backgroundColor: colors.error,
   },
@@ -66,10 +69,6 @@ const CartScreen = (props: Props) => {
   const {cart} = useSelectState();
   const dispatch = useDispatch();
   const scrollY = React.useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    console.log({d: cart.discountPercentage});
-  }, []);
 
   const summary = React.useMemo(() => {
     const data = [
@@ -92,17 +91,11 @@ const CartScreen = (props: Props) => {
 
   return (
     <>
-      <BackButton
-        onPress={() => {
-          if (props.navigation.canGoBack()) {
-            props.navigation.goBack();
-          }
-        }}
-      />
+      <AppBar title="Cart" />
       <Animated.ScrollView
         style={{backgroundColor: colors.white}}
         contentContainerStyle={{
-          paddingTop: top + normalizeY(64),
+          // paddingTop: normalizeY(12),
           paddingHorizontal: normalizeX(24),
           paddingBottom: normalizeY(140),
         }}
@@ -258,7 +251,11 @@ const CartScreen = (props: Props) => {
           //   backgroundColor: 'red',
           justifyContent: 'flex-end',
         }}>
-        <Button label="Checkout" variant="rounded" onPress={() => {}} />
+        <Button
+          label="Checkout"
+          variant="rounded"
+          onPress={() => props.navigation.navigate('CheckoutScreen')}
+        />
       </LinearGradient>
     </>
   );

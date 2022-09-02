@@ -15,11 +15,13 @@ import {RootStackParams} from '../../../types';
 import AppBar from '../../components/AppBar';
 import Button from '../../components/Button';
 import {EditIcon, TrashIcon} from '../../components/Icons';
+import RadioButton from '../../components/RadioButton';
 import Typography from '../../components/Typography';
 import colors from '../../constants/colors';
 import userAddressAsyncActions from '../../store/actions/userAddress.action';
 import RequestManager from '../../store/request-manager';
 import {useSelectState} from '../../store/selectors';
+import {userAddressActions} from '../../store/slices/userAddress.slice';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 
 const styles = StyleSheet.create({
@@ -37,6 +39,8 @@ const styles = StyleSheet.create({
   address: {
     paddingVertical: normalizeY(12),
     borderColor: colors.lightergrey,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
@@ -44,7 +48,7 @@ interface Props
   extends StackScreenProps<RootStackParams, 'AddressBookScreen'> {}
 
 const AddressBookScreen = (props: Props) => {
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const {request, userAddress} = useSelectState();
 
@@ -52,7 +56,7 @@ const AddressBookScreen = (props: Props) => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    dispatch(userAddressAsyncActions.index());
+    // dispatch(userAddressAsyncActions.index());
   }, []);
 
   React.useEffect(() => {
@@ -85,7 +89,7 @@ const AddressBookScreen = (props: Props) => {
     }
   }, [updatedAt, request.updatedAt]);
 
-  const renderPricingOptionsActions = React.useCallback(
+  const renderButtons = React.useCallback(
     (
       progressAnimatedValue: Animated.AnimatedInterpolation,
       _: any,
@@ -191,38 +195,48 @@ const AddressBookScreen = (props: Props) => {
                 Your addresses
               </Typography>
               {userAddress.list.map(
-                ({addressLine, id, name, postalCode}, index) => (
-                  <Swipeable
-                    renderRightActions={(progress, dragX) =>
-                      renderPricingOptionsActions(progress, dragX, id)
-                    }
-                    containerStyle={
-                      {
-                        // borderBottomColor:  colors.fadedWhite
+                ({addressLine, id, name, postalCode}, index) => {
+                  const isActiveAddress = id === userAddress.activeAddressId;
+                  return (
+                    <Swipeable
+                      renderRightActions={(progress, dragX) =>
+                        renderButtons(progress, dragX, id)
                       }
-                    }
-                    key={index}>
-                    <View
-                      style={{
-                        ...styles.address,
-                        borderBottomWidth:
-                          index === userAddress.list.length - 1 ? 0 : 1,
-                      }}>
-                      <Typography
-                        variant="sm"
-                        fontWeight={500}
-                        color={colors.deepgrey}>
-                        {name}
-                      </Typography>
-                      <Typography variant="sm" color={colors.deepgrey}>
-                        {addressLine}
-                      </Typography>
-                      <Typography variant="sm" color={colors.deepgrey}>
-                        {postalCode}
-                      </Typography>
-                    </View>
-                  </Swipeable>
-                ),
+                      key={index}>
+                      <View
+                        style={{
+                          ...styles.address,
+                          borderBottomWidth:
+                            index === userAddress.list.length - 1 ? 0 : 1,
+                        }}>
+                        <View style={{flex: 1}}>
+                          <Typography
+                            variant="sm"
+                            fontWeight={500}
+                            color={colors.deepgrey}>
+                            {name}
+                          </Typography>
+                          <Typography variant="sm" color={colors.deepgrey}>
+                            {addressLine}
+                          </Typography>
+                          <Typography variant="sm" color={colors.deepgrey}>
+                            {postalCode}
+                          </Typography>
+                        </View>
+                        <RadioButton
+                          isChecked={isActiveAddress}
+                          onPress={() =>
+                            dispatch(
+                              userAddressActions.setActiveAddress({
+                                userAddressId: id,
+                              }),
+                            )
+                          }
+                        />
+                      </View>
+                    </Swipeable>
+                  );
+                },
               )}
               <Button
                 variant="flat"

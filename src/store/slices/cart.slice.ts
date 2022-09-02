@@ -2,6 +2,8 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {createSlice} from '@reduxjs/toolkit';
 import {CartProduct} from '../../../types';
 import {calculateCart} from '../../utils/calculateCart';
+import authenticationAsyncActions from '../actions/authentication.action';
+import ordersAsyncActions from '../actions/orders.action';
 import {CartState} from '../types';
 
 const initialState: CartState = {
@@ -97,6 +99,11 @@ const slice = createSlice({
       state.total = total;
     },
     clearCart: () => initialState,
+  },
+  extraReducers: {
+    [ordersAsyncActions.createOrder.fulfilled.type]: () => initialState,
+    [authenticationAsyncActions.signout.fulfilled.type]: () => initialState,
+    [authenticationAsyncActions.signout.rejected.type]: () => initialState,
   },
 });
 

@@ -72,7 +72,7 @@ const ProfileScreen = (props: Props) => {
     () => [
       {
         label: 'Orders',
-        onPress: () => props.navigation.navigate('AddressBookScreen'),
+        onPress: () => props.navigation.navigate('OrdersScreen'),
       },
       {
         label: 'Account Details',
@@ -98,7 +98,7 @@ const ProfileScreen = (props: Props) => {
           variant="h2"
           fontWeight={500}
           style={{textTransform: 'capitalize'}}>
-          {user.firstname}
+          {`${user.firstname} ${user.lastname}`}
         </Typography>
         <View style={{paddingTop: normalizeY(60)}}>
           {settings.map(({label, onPress}, index) => (
