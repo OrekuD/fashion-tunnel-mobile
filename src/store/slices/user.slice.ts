@@ -13,6 +13,7 @@ const initialState: User = {
   email: '',
   firstname: '',
   lastname: '',
+  activeAddressId: '',
 };
 
 const slice = createSlice({

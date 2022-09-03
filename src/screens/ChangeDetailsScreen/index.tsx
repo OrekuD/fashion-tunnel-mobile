@@ -46,7 +46,7 @@ interface Props
 
 const ChangeDetailsScreen = (props: Props) => {
   const {top, bottom} = useSafeAreaInsets();
-  const {user} = useSelectState();
+  const {user, userAddress} = useSelectState();
   const [emailError, setEmailError] = React.useState('');
   const [firstName, setFirstName] = React.useState(user?.firstname || '');
   const [lastName, setLastName] = React.useState(user?.lastname || '');
@@ -98,6 +98,7 @@ const ChangeDetailsScreen = (props: Props) => {
       email: email.trim().toLowerCase(),
       firstname: firstName.trim(),
       lastname: lastName.trim(),
+      activeAddressId: userAddress.activeAddressId,
     };
     dispatch(userAsyncActions.updateDetails(payload));
   };

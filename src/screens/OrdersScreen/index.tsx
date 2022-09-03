@@ -1,6 +1,12 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {RootStackParams} from '../../../types';
 import AppBar from '../../components/AppBar';
@@ -15,6 +21,7 @@ import {cedi} from '../../constants';
 import ordersAsyncActions from '../../store/actions/orders.action';
 import {useDispatch} from 'react-redux';
 import RequestManager from '../../store/request-manager';
+import Button from '../../components/Button';
 
 const styles = StyleSheet.create({
   container: {
@@ -35,7 +42,7 @@ interface Props extends StackScreenProps<RootStackParams, 'MainScreen'> {}
 
 const OrdersScreen = (props: Props) => {
   const {orders, request} = useSelectState();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     dispatch(ordersAsyncActions.index());
@@ -66,47 +73,65 @@ const OrdersScreen = (props: Props) => {
   return (
     <View style={styles.container}>
       <AppBar title="Orders" />
-      <ScrollView
-        style={{backgroundColor: colors.white}}
-        contentContainerStyle={{paddingHorizontal: normalizeX(24)}}>
-        {orders.list.map((order, index) => {
-          return (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.order}
-              key={index}
-              onPress={() =>
-                props.navigation.navigate('OrderScreen', {orderId: order.id})
-              }>
-              <View>
-                <Typography
-                  variant="sm"
-                  color={colors.deepgrey}
-                  fontWeight={500}>
-                  {`# ${formatOrderNumber(order.orderNumber, 4)}`}
-                </Typography>
-                <Typography variant="sm" color={colors.deepgrey}>
-                  {format(new Date(order.createdAt), 'dd/MM/yyy')}
-                </Typography>
-              </View>
-              <View>
-                <Typography
-                  variant="sm"
-                  color={colors.deepgrey}
-                  fontWeight={500}>
-                  {`${cedi} ${order.total.toFixed(2)}`}
-                </Typography>
-                <Typography
-                  variant="sm"
-                  color={colors.deepgrey}
-                  fontWeight={500}>
-                  {OrderStatus.State.text(order.orderStatus)}
-                </Typography>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+      {isLoading ? (
+        <View style={{paddingTop: normalizeY(140), alignItems: 'center'}}>
+          <ActivityIndicator size="small" color={colors.deepgrey} />
+        </View>
+      ) : (
+        <ScrollView
+          style={{backgroundColor: colors.white}}
+          contentContainerStyle={{paddingHorizontal: normalizeX(24)}}>
+          {orders.list.length === 0 ? (
+            <View style={{paddingTop: normalizeY(24)}}>
+              <Typography variant="h2" color={colors.deepgrey}>
+                You currently have no orders.
+              </Typography>
+            </View>
+          ) : (
+            <>
+              {orders.list.map((order, index) => {
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.order}
+                    key={index}
+                    onPress={() =>
+                      props.navigation.navigate('OrderScreen', {
+                        orderId: order.id,
+                      })
+                    }>
+                    <View>
+                      <Typography
+                        variant="sm"
+                        color={colors.deepgrey}
+                        fontWeight={500}>
+                        {`# ${formatOrderNumber(order.orderNumber, 4)}`}
+                      </Typography>
+                      <Typography variant="sm" color={colors.deepgrey}>
+                        {format(new Date(order.createdAt), 'dd/MM/yyy')}
+                      </Typography>
+                    </View>
+                    <View>
+                      <Typography
+                        variant="sm"
+                        color={colors.deepgrey}
+                        fontWeight={500}>
+                        {`${cedi} ${order.total.toFixed(2)}`}
+                      </Typography>
+                      <Typography
+                        variant="sm"
+                        color={colors.deepgrey}
+                        fontWeight={500}>
+                        {OrderStatus.State.text(order.orderStatus)}
+                      </Typography>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </>
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 };

@@ -100,7 +100,6 @@ const AddNewAddressScreen = (props: Props) => {
             placeholder: 'Enter the address name',
             value: name,
             onChangeText: setName,
-            autoCapitalize: 'none',
           }}
         />
         <TextField
@@ -109,7 +108,6 @@ const AddNewAddressScreen = (props: Props) => {
             placeholder: 'Enter the address line',
             value: addressLine,
             onChangeText: setAddressLine,
-            autoCapitalize: 'none',
           }}
         />
         <TextField
@@ -118,7 +116,6 @@ const AddNewAddressScreen = (props: Props) => {
             placeholder: 'Enter the postal code',
             value: postalCode,
             onChangeText: setPostalCode,
-            autoCapitalize: 'none',
           }}
         />
 

@@ -6,6 +6,7 @@ import userAddressAsyncActions from '../actions/userAddress.action';
 import UserAddress from '../../models/UserAddress';
 import OkResponse from '../../network/responses/OkResponse';
 import authenticationAsyncActions from '../actions/authentication.action';
+import AuthenticationResponse from '../../network/responses/AuthenticationResponse';
 
 const initialState: UserAddressState = {
   list: [],
@@ -56,7 +57,6 @@ const slice = createSlice({
       if (index >= 0) {
         state.list.splice(index, 1, action.payload);
       }
-      // state.list.unshift(action.payload);
       postRequest(action);
     },
     [userAddressAsyncActions.updateAddress.rejected.type]: (
@@ -73,7 +73,6 @@ const slice = createSlice({
       if (index >= 0) {
         state.list.splice(index, 1);
       }
-      // state.list.unshift(action.payload);
       postRequest(action);
     },
     [userAddressAsyncActions.deleteAddress.rejected.type]: (
@@ -84,6 +83,18 @@ const slice = createSlice({
     },
     [authenticationAsyncActions.signout.fulfilled.type]: () => initialState,
     [authenticationAsyncActions.signout.rejected.type]: () => initialState,
+    [authenticationAsyncActions.signin.fulfilled.type]: (
+      state,
+      action: CPA<AuthenticationResponse>,
+    ) => {
+      state.activeAddressId = action.payload.user.activeAddressId;
+    },
+    [authenticationAsyncActions.signup.fulfilled.type]: (
+      state,
+      action: CPA<AuthenticationResponse>,
+    ) => {
+      state.activeAddressId = action.payload.user.activeAddressId;
+    },
   },
 });
 

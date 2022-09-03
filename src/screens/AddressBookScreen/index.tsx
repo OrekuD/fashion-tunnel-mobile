@@ -18,6 +18,7 @@ import {EditIcon, TrashIcon} from '../../components/Icons';
 import RadioButton from '../../components/RadioButton';
 import Typography from '../../components/Typography';
 import colors from '../../constants/colors';
+import userAsyncActions from '../../store/actions/user.action';
 import userAddressAsyncActions from '../../store/actions/userAddress.action';
 import RequestManager from '../../store/request-manager';
 import {useSelectState} from '../../store/selectors';
@@ -48,15 +49,15 @@ interface Props
   extends StackScreenProps<RootStackParams, 'AddressBookScreen'> {}
 
 const AddressBookScreen = (props: Props) => {
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [isDeleting, setIsDeleting] = React.useState(false);
-  const {request, userAddress} = useSelectState();
+  const {request, userAddress, user} = useSelectState();
 
   const [updatedAt] = React.useState(request.updatedAt);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    // dispatch(userAddressAsyncActions.index());
+    dispatch(userAddressAsyncActions.index());
   }, []);
 
   React.useEffect(() => {
@@ -203,7 +204,23 @@ const AddressBookScreen = (props: Props) => {
                         renderButtons(progress, dragX, id)
                       }
                       key={index}>
-                      <View
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => {
+                          dispatch(
+                            userAddressActions.setActiveAddress({
+                              userAddressId: id,
+                            }),
+                          );
+                          dispatch(
+                            userAsyncActions.updateDetails({
+                              activeAddressId: id,
+                              email: user.email,
+                              lastname: user.lastname,
+                              firstname: user.firstname,
+                            }),
+                          );
+                        }}
                         style={{
                           ...styles.address,
                           borderBottomWidth:
@@ -225,15 +242,23 @@ const AddressBookScreen = (props: Props) => {
                         </View>
                         <RadioButton
                           isChecked={isActiveAddress}
-                          onPress={() =>
+                          onPress={() => {
                             dispatch(
                               userAddressActions.setActiveAddress({
                                 userAddressId: id,
                               }),
-                            )
-                          }
+                            );
+                            dispatch(
+                              userAsyncActions.updateDetails({
+                                activeAddressId: id,
+                                email: user.email,
+                                lastname: user.lastname,
+                                firstname: user.firstname,
+                              }),
+                            );
+                          }}
                         />
-                      </View>
+                      </TouchableOpacity>
                     </Swipeable>
                   );
                 },
