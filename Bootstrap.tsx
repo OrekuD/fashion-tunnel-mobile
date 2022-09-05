@@ -1,3 +1,4 @@
+import {PortalProvider} from '@gorhom/portal';
 import React from 'react';
 import {ActivityIndicator, Text, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -5,6 +6,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import {Store} from 'redux';
 import App from './App';
+import SocketManager from './src/components/SocketManager';
 import colors from './src/constants/colors';
 import initializeStore from './src/store';
 
@@ -40,9 +42,13 @@ const Bootstrap = () => {
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{flex: 1}}>
-        <SafeAreaProvider>
-          <App />
-        </SafeAreaProvider>
+        <SocketManager>
+          <SafeAreaProvider>
+            <PortalProvider>
+              <App />
+            </PortalProvider>
+          </SafeAreaProvider>
+        </SocketManager>
       </GestureHandlerRootView>
     </Provider>
   );

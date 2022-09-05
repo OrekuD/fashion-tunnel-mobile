@@ -1,5 +1,4 @@
-import {DetailedOrderProduct} from './../../types';
-import {OrderProduct} from '../../types';
+import {DetailedOrderProduct, OrderStatusTimeStamp} from './../../types';
 import OrderStatus from '../namespace/OrderStatus';
 import UserAddress from './UserAddress';
 
@@ -12,5 +11,6 @@ export default interface Order {
   deliveryAddress: UserAddress;
   createdAt: string;
   products: Array<DetailedOrderProduct>;
-  orderStatus: OrderStatus.Status;
+  status: OrderStatus.Status;
+  statusTimeStamps: Array<OrderStatusTimeStamp>;
 }

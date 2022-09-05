@@ -31,6 +31,9 @@ const slice = createSlice({
       action: CPA<Array<UserAddress>>,
     ) => {
       state.list = action.payload;
+      if (!state.activeAddressId) {
+        state.activeAddressId = action.payload[0].id;
+      }
       postRequest(action);
     },
     [userAddressAsyncActions.index.rejected.type]: (_, action: CPA<any>) => {
@@ -40,6 +43,9 @@ const slice = createSlice({
       state,
       action: CPA<UserAddress>,
     ) => {
+      if (state.list.length === 0) {
+        state.activeAddressId = action.payload.id;
+      }
       state.list.unshift(action.payload);
       postRequest(action);
     },

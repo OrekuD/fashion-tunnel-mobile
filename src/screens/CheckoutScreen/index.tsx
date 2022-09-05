@@ -1,3 +1,4 @@
+import {CommonActions} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {
@@ -47,6 +48,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
   },
+  summary: {
+    borderBottomColor: colors.lightergrey,
+    borderBottomWidth: 1,
+    paddingBottom: normalizeY(12),
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: normalizeY(6),
+  },
 });
 
 interface Props extends StackScreenProps<RootStackParams, 'CheckoutScreen'> {}
@@ -73,7 +85,21 @@ const CheckoutScreen = (props: Props) => {
     if (RM.isFulfilled(ordersAsyncActions.createOrder.typePrefix)) {
       RM.consume(ordersAsyncActions.createOrder.typePrefix);
       setIsLoading(false);
-      props.navigation.navigate('OrderScreen', {orderId: orders.list[0].id});
+      // props.navigation.navigate('OrderScreen', {orderId: orders.list[0].id});
+      props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {name: 'MainScreen'},
+            {
+              name: 'OrderScreen',
+              params: {
+                orderId: orders.list[0].id,
+              },
+            },
+          ],
+        }),
+      );
       return;
     }
 
@@ -86,11 +112,29 @@ const CheckoutScreen = (props: Props) => {
   }, [updatedAt, request.updatedAt]);
 
   const canProceed = React.useMemo(() => {
-    // if (emailError.trim().length > 0) {
-    //   return false;
-    // }
-    return true;
-  }, []);
+    if (!activeAddress?.id) return false;
+    if (cart.products.length === 0) return false;
+    return activeAddress.id.length > 0;
+  }, [userAddress, cart.products]);
+
+  const summary = React.useMemo(() => {
+    const data = [
+      {label: 'Subtotal', value: `${cedi} ${cart.subtotal.toFixed(2)}`},
+    ];
+
+    if (cart.discountPercentage > 0) {
+      data.push({
+        label: 'Discount %',
+        value: `${cart.discountPercentage * 100} %`,
+      });
+      data.push({
+        label: 'Discount',
+        value: `${cedi} ${cart.discount.toFixed(2)}`,
+      });
+    }
+
+    return data;
+  }, [cart.discount, cart.discountPercentage, cart.subtotal, cart.total]);
 
   const handleSubmit = () => {
     if (!canProceed || isLoading) {
@@ -113,14 +157,43 @@ const CheckoutScreen = (props: Props) => {
       <AppBar title="Checkout" />
       <ScrollView
         style={{backgroundColor: colors.white}}
-        contentContainerStyle={{paddingHorizontal: normalizeX(24)}}>
+        contentContainerStyle={{
+          paddingHorizontal: normalizeX(24),
+          paddingBottom: normalizeY(100),
+        }}>
+        <View style={styles.summary}>
+          <Typography
+            variant="h2"
+            color={colors.deepgrey}
+            style={{marginTop: normalizeY(24), marginBottom: normalizeY(12)}}>
+            Cart summary
+          </Typography>
+          {summary.map(({label, value}, index) => (
+            <View style={styles.item} key={index}>
+              <Typography variant="sm" color={colors.deepgrey}>
+                {label}
+              </Typography>
+              <Typography variant="sm" color={colors.deepgrey} fontWeight={500}>
+                {value}
+              </Typography>
+            </View>
+          ))}
+          <View style={styles.item}>
+            <Typography variant="sm" color={colors.deepgrey}>
+              Total
+            </Typography>
+            <Typography variant="sm" color={colors.deepgrey} fontWeight={500}>
+              {`${cedi} ${cart.total.toFixed(2)}`}
+            </Typography>
+          </View>
+        </View>
         <Typography
           variant="h2"
           color={colors.deepgrey}
           style={{marginTop: normalizeY(24), marginBottom: normalizeY(12)}}>
           Cart details
         </Typography>
-        {cart.products.map(({name, total, count, images, price}, index) => {
+        {cart.products.map(({name, total, count, images}, index) => {
           return (
             <View style={styles.product} key={index}>
               <CachedImage source={{uri: images[0]}} style={styles.image} />
@@ -129,10 +202,10 @@ const CheckoutScreen = (props: Props) => {
                   {name}
                 </Typography>
                 <Typography variant="sm" color={colors.deepgrey}>
-                  {`${cedi} ${price.toFixed(2)}`}
+                  {`${cedi} ${total.toFixed(2)}`}
                 </Typography>
                 <Typography variant="sm" color={colors.deepgrey}>
-                  {`QTY - ${count}`}
+                  {`x ${count}`}
                 </Typography>
               </View>
             </View>
@@ -175,6 +248,12 @@ const CheckoutScreen = (props: Props) => {
         ) : (
           <>
             <Typography variant="sm">No addresses set</Typography>
+            <Button
+              label="Add one"
+              variant="flat"
+              onPress={() => props.navigation.navigate('AddressBookScreen')}
+              style={{marginTop: normalizeY(12)}}
+            />
           </>
         )}
       </ScrollView>

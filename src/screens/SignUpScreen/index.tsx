@@ -27,6 +27,8 @@ import BackButton from '../../components/BackButton';
 import colors from '../../constants/colors';
 import authenticationAsyncActions from '../../store/actions/authentication.action';
 import {isAndroid} from '../../constants';
+import {useSelectState} from '../../store/selectors';
+import RequestManager from '../../store/request-manager';
 
 const styles = StyleSheet.create({
   container: {
@@ -51,6 +53,28 @@ const SignUpScreen = (props: Props) => {
   const {top} = useSafeAreaInsets();
 
   const dispatch = useDispatch();
+  const {request} = useSelectState();
+  const [updatedAt] = React.useState(request.updatedAt);
+
+  React.useEffect(() => {
+    if (updatedAt === request.updatedAt) {
+      return;
+    }
+    const RM = new RequestManager(request, dispatch);
+
+    if (RM.isFulfilled(authenticationAsyncActions.signup.typePrefix)) {
+      RM.consume(authenticationAsyncActions.signup.typePrefix);
+      setIsLoading(false);
+      return;
+    }
+
+    if (RM.isRejected(authenticationAsyncActions.signup.typePrefix)) {
+      RM.consume(authenticationAsyncActions.signup.typePrefix);
+      setIsLoading(false);
+      setEmailError('There was an issue creating your account');
+      return;
+    }
+  }, [updatedAt, request.updatedAt]);
 
   const canProceed = React.useMemo(() => {
     if (emailError.trim().length > 0) {
@@ -106,7 +130,6 @@ const SignUpScreen = (props: Props) => {
                 placeholder: 'Enter your first name',
                 value: firstName,
                 onChangeText: setFirstName,
-                autoCapitalize: 'none',
               }}
               rightIcon={
                 <UserIcon
@@ -117,12 +140,11 @@ const SignUpScreen = (props: Props) => {
               }
             />
             <TextField
-              name="First name"
+              name="Last name"
               textInputProps={{
                 placeholder: 'Enter your last name',
                 value: lastName,
                 onChangeText: setLastName,
-                autoCapitalize: 'none',
               }}
               rightIcon={
                 <UserIcon
@@ -157,15 +179,16 @@ const SignUpScreen = (props: Props) => {
               name="Password"
               textInputProps={{
                 placeholder: 'Enter your password',
-                secureTextEntry: showPassword,
+                secureTextEntry: !showPassword,
                 value: password,
                 onChangeText: setPassword,
+                autoCapitalize: 'none',
               }}
               rightIcon={
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => setShowPassword(!showPassword)}>
-                  {showPassword ? (
+                  {!showPassword ? (
                     <EyeCancelIcon
                       width={normalizeY(24)}
                       height={normalizeY(24)}

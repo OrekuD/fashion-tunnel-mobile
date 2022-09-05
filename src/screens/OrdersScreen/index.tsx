@@ -111,7 +111,7 @@ const OrdersScreen = (props: Props) => {
                         {format(new Date(order.createdAt), 'dd/MM/yyy')}
                       </Typography>
                     </View>
-                    <View>
+                    <View style={{width: normalizeX(94)}}>
                       <Typography
                         variant="sm"
                         color={colors.deepgrey}
@@ -122,7 +122,7 @@ const OrdersScreen = (props: Props) => {
                         variant="sm"
                         color={colors.deepgrey}
                         fontWeight={500}>
-                        {OrderStatus.State.text(order.orderStatus)}
+                        {OrderStatus.State.text(order.status)}
                       </Typography>
                     </View>
                   </TouchableOpacity>

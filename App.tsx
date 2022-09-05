@@ -29,6 +29,7 @@ import EditAddressScreen from './src/screens/EditAddressScreen';
 import CheckoutScreen from './src/screens/CheckoutScreen';
 import OrderScreen from './src/screens/OrderScreen';
 import FavouritesScreen from './src/screens/FavouritesScreen';
+import {REACT_APP_API_URL} from '@env';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();
@@ -54,6 +55,7 @@ const RootStackNavigation = () => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
+    // console.log('API: ', REACT_APP_API_URL);
     const launch = async () => {
       API.client.interceptors.response.use(
         (response: AxiosResponse<any>): AxiosResponse<any> => response,

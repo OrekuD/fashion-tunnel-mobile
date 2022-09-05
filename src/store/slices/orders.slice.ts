@@ -1,6 +1,7 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import Order from '../../models/Order';
 import ErrorResponse from '../../network/responses/ErrorResponse';
+import OrderStatusChangeResponse from '../../network/responses/OrderStatusChangeResponse';
 import ordersAsyncActions from '../actions/orders.action';
 import postErrorRequest from '../postErrorRequest';
 import postRequest from '../postRequest';
@@ -13,7 +14,40 @@ const initialState: OrdersState = {
 const slice = createSlice({
   name: 'orders',
   initialState,
-  reducers: {},
+  reducers: {
+    updateOrderStatus: (
+      state,
+      action: PayloadAction<OrderStatusChangeResponse>,
+    ) => {
+      const orderIndex = state.list.findIndex(
+        ({id}) => id === action.payload.orderId,
+      );
+      if (orderIndex < 0) {
+        return;
+      }
+
+      const statusTimeStamps = state.list[orderIndex].statusTimeStamps;
+      const timeStampIndex = statusTimeStamps.findIndex(
+        ({status}) => status === action.payload.status,
+      );
+      if (timeStampIndex < 0) {
+        statusTimeStamps.unshift({
+          status: action.payload.status,
+          time: action.payload.timeStamp,
+        });
+      } else {
+        statusTimeStamps.splice(timeStampIndex, 1, {
+          status: action.payload.status,
+          time: action.payload.timeStamp,
+        });
+      }
+      state.list.splice(orderIndex, 1, {
+        ...state.list[orderIndex],
+        status: action.payload.status,
+        statusTimeStamps,
+      });
+    },
+  },
   extraReducers: {
     [ordersAsyncActions.index.fulfilled.type]: (
       state,

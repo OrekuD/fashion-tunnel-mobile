@@ -37,12 +37,12 @@ const signup = createAsyncThunk(
         SignUpRequest,
         AxiosResponse<AuthenticationResponse>
       >('/user/sign-up', payload);
-      // console.log({ response: response.data });
+      // console.log({response: response.data});
       thunkApi.dispatch(requestActions.beforeFulfilled(signup.typePrefix));
 
       return response.data;
     } catch (error) {
-      // console.log({ error: error });
+      // console.log({error: error});
       thunkApi.dispatch(requestActions.beforeRejected(signup.typePrefix));
       return thunkApi.rejectWithValue({error});
     }

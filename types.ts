@@ -1,5 +1,6 @@
 import moment from 'moment';
 import Product from './src/models/Product';
+import OrderStatus from './src/namespace/OrderStatus';
 import ClothSizes from './src/namespaces/ClothSizes';
 import ProductCategories from './src/namespaces/ProductCategories';
 import ProductGender from './src/namespaces/ProductGender';
@@ -50,6 +51,11 @@ export interface OrderProduct {
   total: number;
 }
 
+export interface OrderStatusTimeStamp {
+  status: OrderStatus.Status;
+  time: string;
+}
+
 export interface DetailedOrderProduct {
   id: string;
   price: number;
@@ -95,4 +101,12 @@ export namespace Request {
 
 export class Timing {
   public static now = () => moment().valueOf();
+}
+
+export enum Events {
+  USER_ADDRESS_CREATE = 'user:address:create',
+  USER_ORDER_CREATE = 'user:order:create',
+  USER_PROFILE_UPDATE = 'user:profile:update',
+  USER_FAVOURITE_ITEM = 'user:favourite:item',
+  ORDER_STATUS_CHANGE = 'order:status:change',
 }
