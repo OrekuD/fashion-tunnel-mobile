@@ -418,7 +418,7 @@ const ProductScreen = (props: Props) => {
       </View>
       <Animated.ScrollView
         contentContainerStyle={{
-          paddingBottom: bottom + normalizeY(120),
+          paddingBottom: (bottom || normalizeY(12)) + normalizeY(120),
           paddingTop: top,
         }}
         scrollEventThrottle={16}
@@ -552,7 +552,7 @@ const ProductScreen = (props: Props) => {
         }}
         style={{
           ...styles.cartButton,
-          bottom: bottom,
+          bottom: bottom || normalizeY(24),
           backgroundColor: isItemInCart ? colors.error : colors.deepgrey,
         }}>
         {isItemInCart ? (
@@ -572,7 +572,8 @@ const ProductScreen = (props: Props) => {
       <View
         style={{
           ...styles.footer,
-          height: bottom + normalizeY(120),
+          height: (bottom || normalizeY(12)) + normalizeY(120),
+          // backgroundColor: 'red',
         }}
         pointerEvents="none">
         <LinearGradient

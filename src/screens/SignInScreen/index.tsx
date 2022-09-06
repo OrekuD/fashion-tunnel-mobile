@@ -38,6 +38,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalizeX(24),
     paddingBottom: normalizeY(100),
   },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: normalizeY(16),
+  },
 });
 
 interface Props extends StackScreenProps<RootStackParams, 'SignInScreen'> {}
@@ -164,24 +169,21 @@ const SignInScreen = (props: Props) => {
               </TouchableOpacity>
             }
           />
-          <Typography
-            variant="sm"
-            color={colors.black}
-            textAlign="center"
-            style={{marginBottom: normalizeY(16)}}>
-            Don't have an account?{' '}
+          <View style={styles.row}>
+            <Typography variant="sm" color={colors.black} textAlign="center">
+              Don't have an account?{' '}
+            </Typography>
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => props.navigation.navigate('SignUpScreen')}>
               <Typography
                 variant="sm"
                 color={colors.primary}
-                textAlign="center"
-                style={{marginTop: normalizeY(3)}}>
+                textAlign="center">
                 Create one
               </Typography>
             </TouchableOpacity>
-          </Typography>
+          </View>
           <Button
             label="Sign in"
             variant="rounded"

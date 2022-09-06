@@ -86,7 +86,7 @@ const AddNewAddressScreen = (props: Props) => {
         contentContainerStyle={{
           paddingHorizontal: normalizeX(24),
           flex: 1,
-          paddingBottom: bottom + normalizeY(12),
+          paddingBottom: (bottom || normalizeY(12)) + normalizeY(12),
         }}>
         <Typography
           variant="h2"

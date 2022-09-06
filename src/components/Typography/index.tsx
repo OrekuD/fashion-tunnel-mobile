@@ -1,6 +1,7 @@
 import React, {FC, ReactNode, useMemo} from 'react';
 import {StyleSheet, Text, TextProps, TextStyle} from 'react-native';
 import {isAndroid} from '../../constants';
+import colors from '../../constants/colors';
 import {normalizeY} from '../../utils/normalize';
 
 const styles = StyleSheet.create({
@@ -79,7 +80,7 @@ const Typography: FC<Props> = (props: Props) => {
           fontFamily,
           fontSize: props.fontSize,
           lineHeight: props.lineHeight,
-          color: props.color,
+          color: props.color || colors.deepgrey,
           textAlign: props.textAlign,
         },
         styles[props.variant],

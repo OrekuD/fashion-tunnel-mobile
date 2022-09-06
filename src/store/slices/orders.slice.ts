@@ -19,18 +19,20 @@ const slice = createSlice({
       state,
       action: PayloadAction<OrderStatusChangeResponse>,
     ) => {
-      const orderIndex = state.list.findIndex(
+      const tempList = state.list;
+      const orderIndex = tempList.findIndex(
         ({id}) => id === action.payload.orderId,
       );
       if (orderIndex < 0) {
         return;
       }
 
-      const statusTimeStamps = state.list[orderIndex].statusTimeStamps;
+      const statusTimeStamps = tempList[orderIndex].statusTimeStamps;
       const timeStampIndex = statusTimeStamps.findIndex(
         ({status}) => status === action.payload.status,
       );
       if (timeStampIndex < 0) {
+        // console.log('new');
         statusTimeStamps.unshift({
           status: action.payload.status,
           time: action.payload.timeStamp,
@@ -40,12 +42,16 @@ const slice = createSlice({
           status: action.payload.status,
           time: action.payload.timeStamp,
         });
+        // console.log('old');
       }
-      state.list.splice(orderIndex, 1, {
-        ...state.list[orderIndex],
+      // console.log('before: ', tempList[orderIndex].status);
+      tempList.splice(orderIndex, 1, {
+        ...tempList[orderIndex],
         status: action.payload.status,
         statusTimeStamps,
       });
+      // console.log('after: ', tempList[orderIndex].status);
+      state.list = tempList;
     },
   },
   extraReducers: {

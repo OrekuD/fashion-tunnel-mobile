@@ -17,7 +17,7 @@ import formatOrderNumber from '../../utils/formatOrderNumber';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 import {format} from 'date-fns';
 import OrderStatus from '../../namespace/OrderStatus';
-import {cedi} from '../../constants';
+import {cedi, isAndroid} from '../../constants';
 import ordersAsyncActions from '../../store/actions/orders.action';
 import {useDispatch} from 'react-redux';
 import RequestManager from '../../store/request-manager';
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: normalizeY(16),
+    paddingVertical: normalizeY(14),
     borderBottomWidth: 1,
     borderBottomColor: colors.lightergrey,
   },
@@ -102,24 +102,26 @@ const OrdersScreen = (props: Props) => {
                     }>
                     <View>
                       <Typography
-                        variant="sm"
+                        variant={isAndroid ? 'tiny' : 'sm'}
                         color={colors.deepgrey}
                         fontWeight={500}>
                         {`# ${formatOrderNumber(order.orderNumber, 4)}`}
                       </Typography>
-                      <Typography variant="sm" color={colors.deepgrey}>
+                      <Typography
+                        variant={isAndroid ? 'tiny' : 'sm'}
+                        color={colors.deepgrey}>
                         {format(new Date(order.createdAt), 'dd/MM/yyy')}
                       </Typography>
                     </View>
                     <View style={{width: normalizeX(94)}}>
                       <Typography
-                        variant="sm"
+                        variant={isAndroid ? 'tiny' : 'sm'}
                         color={colors.deepgrey}
                         fontWeight={500}>
                         {`${cedi} ${order.total.toFixed(2)}`}
                       </Typography>
                       <Typography
-                        variant="sm"
+                        variant={isAndroid ? 'tiny' : 'sm'}
                         color={colors.deepgrey}
                         fontWeight={500}>
                         {OrderStatus.State.text(order.status)}

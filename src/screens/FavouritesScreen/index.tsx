@@ -28,6 +28,7 @@ const FavouritesScreen = (props: Props) => {
       <Typography
         variant="h3"
         fontWeight={500}
+        color={colors.deepgrey}
         style={{paddingLeft: normalizeX(24)}}>
         Wishlist
       </Typography>

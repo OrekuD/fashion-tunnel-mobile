@@ -177,7 +177,7 @@ const ChangeDetailsScreen = (props: Props) => {
             variant="h2"
             color={colors.deepgrey}
             style={{marginTop: normalizeY(12), marginBottom: normalizeY(24)}}>
-            Password
+            Account security
           </Typography>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -203,7 +203,7 @@ const ChangeDetailsScreen = (props: Props) => {
         style={{
           marginTop: 'auto',
           alignSelf: 'center',
-          marginBottom: bottom + normalizeY(12),
+          marginBottom: (bottom || normalizeY(12)) + normalizeY(12),
         }}
       />
     </View>

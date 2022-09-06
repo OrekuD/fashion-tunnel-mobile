@@ -30,6 +30,7 @@ import CheckoutScreen from './src/screens/CheckoutScreen';
 import OrderScreen from './src/screens/OrderScreen';
 import FavouritesScreen from './src/screens/FavouritesScreen';
 import {REACT_APP_API_URL} from '@env';
+import {StatusBar} from 'react-native';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();

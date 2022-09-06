@@ -103,10 +103,16 @@ interface Props extends StackScreenProps<RootStackParams, 'OrderScreen'> {}
 const OrderScreen = (props: Props) => {
   const {orders} = useSelectState();
 
-  const order = React.useMemo(
-    () => orders.list.find(({id}) => id === props.route.params.orderId),
-    [orders.list, props.route.params.orderId],
-  );
+  const order = React.useMemo(() => {
+    const order = orders.list.find(({id}) => id === props.route.params.orderId);
+    // console.log('updated', order?.status);
+    return order;
+  }, [orders.list, props.route.params.orderId]);
+
+  // React.useEffect(() => {
+  //   const order = orders.list.find(({id}) => id === props.route.params.orderId);
+  //   console.log('updated', order?.status);
+  // }, [orders.list, props.route.params.orderId]);
 
   const summary = React.useMemo(() => {
     const data = [

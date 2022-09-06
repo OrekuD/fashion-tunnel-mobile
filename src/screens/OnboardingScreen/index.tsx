@@ -17,7 +17,7 @@ import {useDispatch} from 'react-redux';
 import {RootStackParams} from '../../../types';
 import {ArrowRightIcon, Logo} from '../../components/Icons';
 import Typography from '../../components/Typography';
-import {screenheight, screenwidth} from '../../constants';
+import {isAndroid, screenheight, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
 import {uiActions} from '../../store/slices/ui.slice';
 import {normalizeX, normalizeY} from '../../utils/normalize';
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 'auto',
-    marginBottom: normalizeY(40),
+    // marginBottom: isAndroid ? normalizeY(30) : normalizeY(40),
     shadowColor: colors.grey,
     shadowOffset: {width: 10, height: 10},
     shadowOpacity: 0.3,
@@ -201,18 +201,22 @@ const OnboardingScreen = (props: Props) => {
 
   return (
     <View style={styles.parent}>
-      <StatusBar barStyle="light-content" translucent />
+      <StatusBar
+        barStyle="light-content"
+        translucent
+        backgroundColor="transparent"
+      />
       <View
         style={{
           ...styles.logo,
-          top: top + normalizeY(0),
+          top: top + (isAndroid ? normalizeY(12) : normalizeY(0)),
         }}>
         <Logo scale={2} color={colors.white} />
       </View>
       <View
         style={{
           ...styles.slideIndexIndicator,
-          bottom: bottom + normalizeY(90),
+          bottom: bottom + (isAndroid ? normalizeY(120) : normalizeY(90)),
           width: screenwidth,
         }}>
         {slides.map((_, index) => {
@@ -275,7 +279,7 @@ const OnboardingScreen = (props: Props) => {
         activeOpacity={0.8}
         style={{
           ...styles.button,
-          bottom: 0,
+          bottom: bottom || normalizeY(24),
           zIndex: 4,
         }}
         onPress={handleNext}>
@@ -311,7 +315,8 @@ const OnboardingScreen = (props: Props) => {
               style={{
                 ...styles.slide,
                 width: screenwidth,
-                paddingTop: screenheight * 0.55,
+                paddingTop: screenheight * 0.5,
+                // backgroundColor: 'red',
               }}
               key={title}>
               <View style={styles.container}>

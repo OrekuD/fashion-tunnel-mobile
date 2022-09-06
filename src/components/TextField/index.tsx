@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     color: colors.black,
     fontSize: normalizeY(14),
     fontFamily: 'Poppins-Regular',
+    paddingHorizontal: 0,
   },
 });
 

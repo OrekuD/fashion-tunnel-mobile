@@ -88,13 +88,13 @@ const ChangePasswordScreen = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <AppBar title="Change Password" />
+      <AppBar title="Account Security" />
       <ScrollView
         style={{backgroundColor: colors.white}}
         contentContainerStyle={{
           paddingHorizontal: normalizeX(24),
           flex: 1,
-          paddingBottom: bottom + normalizeY(12),
+          paddingBottom: (bottom || normalizeY(12)) + normalizeY(12),
         }}>
         <Typography
           variant="h2"

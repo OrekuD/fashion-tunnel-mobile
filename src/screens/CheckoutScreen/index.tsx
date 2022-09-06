@@ -266,7 +266,7 @@ const CheckoutScreen = (props: Props) => {
         style={{
           marginTop: normalizeY(12),
           alignSelf: 'center',
-          marginBottom: bottom + normalizeY(12),
+          marginBottom: (bottom || normalizeY(12)) + normalizeY(12),
         }}
       />
     </View>

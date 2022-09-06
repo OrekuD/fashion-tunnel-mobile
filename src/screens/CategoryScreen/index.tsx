@@ -21,7 +21,7 @@ import AppBar from '../../components/AppBar';
 import {FilterIcon} from '../../components/Icons';
 import ProductCard from '../../components/ProductCard';
 import Typography from '../../components/Typography';
-import {images, screenwidth} from '../../constants';
+import {images, isAndroid, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
 import ProductCategories from '../../namespaces/ProductCategories';
 import {useSelectState} from '../../store/selectors';
@@ -63,13 +63,14 @@ const CategoryScreen = (props: Props) => {
   const [selectedCategoryId, setSelectedCategoryId] =
     React.useState<ProductCategories.Status>(props.route.params.categoryId);
 
-  const categoryProducts = React.useMemo(
-    () =>
-      products.list.filter(
-        ({productCategory}) => productCategory === selectedCategoryId,
-      ),
-    [products.list, selectedCategoryId],
-  );
+  const categoryProducts = React.useMemo(() => {
+    if (selectedCategoryId < 0) {
+      return products.list;
+    }
+    return products.list.filter(
+      ({productCategory}) => productCategory === selectedCategoryId,
+    );
+  }, [products.list, selectedCategoryId]);
 
   React.useEffect(() => {
     // console.log({
@@ -121,12 +122,23 @@ const CategoryScreen = (props: Props) => {
   });
   return (
     <>
-      <AppBar title={ProductCategories.State.text(selectedCategoryId)} />
+      <AppBar
+        title={
+          selectedCategoryId < 0
+            ? 'All products'
+            : ProductCategories.State.text(selectedCategoryId)
+        }
+        subTitle={
+          categoryProducts.length === 1
+            ? '1 item'
+            : `${categoryProducts.length} items`
+        }
+      />
       <Animated.View
         style={[
           styles.categories,
           {
-            top: top + normalizeY(8) + normalizeY(26) + normalizeY(12),
+            top: top + (isAndroid ? normalizeY(64) : normalizeY(48)),
           },
           categoriesStyle,
         ]}>
@@ -164,9 +176,11 @@ const CategoryScreen = (props: Props) => {
                     ? 'rgba(41, 37, 37, 0.05)'
                     : colors.white,
                 }}
-                onPress={() => setSelectedCategoryId(productCategory)}
+                onPress={() =>
+                  setSelectedCategoryId(isActiveCategory ? -1 : productCategory)
+                }
                 key={index}>
-                <Typography variant="sm">
+                <Typography variant="sm" color={colors.deepgrey}>
                   {ProductCategories.State.text(productCategory)}
                 </Typography>
               </TouchableOpacity>
