@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 import io, {Socket} from 'socket.io-client';
 import {Events} from '../../types';
 import SocketContext from '../contexts/SocketContext';
+import Order from '../models/Order';
 import OrderStatusChangeResponse from '../network/responses/OrderStatusChangeResponse';
 import {useSelectState} from '../store/selectors';
 import {ordersActions} from '../store/slices/orders.slice';
@@ -63,8 +64,14 @@ const SocketManager: React.FC<Props> = (props: Props) => {
       dispatch(ordersActions.updateOrderStatus(data));
     });
 
+    socket.on(Events.USER_ORDER_CREATE, (data: Order) => {
+      console.log(Events.USER_ORDER_CREATE, {data});
+      dispatch(ordersActions.addNewOrder(data));
+    });
+
     return () => {
       socket.off(Events.ORDER_STATUS_CHANGE);
+      socket.off(Events.USER_ORDER_CREATE);
     };
   }, [socket]);
 

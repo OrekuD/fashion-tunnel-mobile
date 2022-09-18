@@ -32,26 +32,30 @@ const slice = createSlice({
         ({status}) => status === action.payload.status,
       );
       if (timeStampIndex < 0) {
-        // console.log('new');
         statusTimeStamps.unshift({
           status: action.payload.status,
-          time: action.payload.timeStamp,
+          time: action.payload.time,
         });
       } else {
         statusTimeStamps.splice(timeStampIndex, 1, {
           status: action.payload.status,
-          time: action.payload.timeStamp,
+          time: action.payload.time,
         });
-        // console.log('old');
       }
-      // console.log('before: ', tempList[orderIndex].status);
       tempList.splice(orderIndex, 1, {
         ...tempList[orderIndex],
         status: action.payload.status,
         statusTimeStamps,
       });
-      // console.log('after: ', tempList[orderIndex].status);
       state.list = tempList;
+    },
+    addNewOrder: (state, action: PayloadAction<Order>) => {
+      const orderIndex = state.list.findIndex(
+        ({id}) => id === action.payload.id,
+      );
+      if (orderIndex < 0) {
+        state.list.unshift(action.payload);
+      }
     },
   },
   extraReducers: {

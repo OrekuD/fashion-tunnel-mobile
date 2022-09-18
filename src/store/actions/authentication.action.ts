@@ -17,11 +17,11 @@ const signin = createAsyncThunk(
         AxiosResponse<AuthenticationResponse>
       >('/user/sign-in', payload);
 
-      // console.log({ d: response.data });
+      console.log({d: response.data});
       thunkApi.dispatch(requestActions.beforeFulfilled(signin.typePrefix));
       return response.data;
     } catch (error) {
-      // console.log({ error });
+      console.log({error});
       thunkApi.dispatch(requestActions.beforeRejected(signin.typePrefix));
       return thunkApi.rejectWithValue({error});
     }

@@ -56,17 +56,16 @@ const RootStackNavigation = () => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    // console.log('API: ', REACT_APP_API_URL);
     const launch = async () => {
       API.client.interceptors.response.use(
         (response: AxiosResponse<any>): AxiosResponse<any> => response,
         (error: any) => {
           if (error.response) {
-            if (error.response.status === 401) {
+            if (error.response.status === 403) {
               dispatch(authenticationAsyncActions.signout());
             }
           } else if (error.status) {
-            if (error.status === 401) {
+            if (error.status === 403) {
               dispatch(authenticationAsyncActions.signout());
             }
           }
