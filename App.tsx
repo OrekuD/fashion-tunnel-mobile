@@ -31,6 +31,8 @@ import OrderScreen from './src/screens/OrderScreen';
 import FavouritesScreen from './src/screens/FavouritesScreen';
 import {REACT_APP_API_URL} from '@env';
 import {StatusBar} from 'react-native';
+import ProfilePictureScreen from './src/screens/ProfilePictureScreen';
+import SearchScreen from './src/screens/SearchScreen';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();
@@ -119,6 +121,11 @@ const RootStackNavigation = () => {
             name="ChangeDetailsScreen"
             component={ChangeDetailsScreen}
           />
+          <Stack.Screen
+            name="ProfilePictureScreen"
+            component={ProfilePictureScreen}
+          />
+          <Stack.Screen name="SearchScreen" component={SearchScreen} />
         </>
       ) : (
         <>

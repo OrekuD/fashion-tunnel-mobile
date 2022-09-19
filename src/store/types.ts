@@ -22,6 +22,11 @@ export interface ProductsState {
   list: Array<Product>;
 }
 
+export interface SearchState {
+  list: Array<Product>;
+  query: string;
+}
+
 export interface UserAddressState {
   list: Array<UserAddress>;
   activeAddressId: string;
@@ -37,6 +42,10 @@ export interface OrdersState {
 
 export interface UIState {
   isFirstLaunch: boolean;
+}
+
+export interface UploadState {
+  image: string;
 }
 
 export type CPA<T = any> = PayloadAction<T> & {dispatch: Function};

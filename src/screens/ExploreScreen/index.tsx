@@ -18,6 +18,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParams} from '../../../types';
 import ProductCategories from '../../namespaces/ProductCategories';
+import {useDispatch} from 'react-redux';
+import {searchActions} from '../../store/slices/search.slice';
+import searchAsyncActions from '../../store/actions/search.action';
 
 const styles = StyleSheet.create({
   header: {
@@ -40,7 +43,8 @@ const styles = StyleSheet.create({
     width: normalizeY(48),
     height: normalizeY(48),
     borderRadius: normalizeY(48 / 2),
-    marginLeft: normalizeX(16),
+    // marginLeft: normalizeX(16),
+    marginLeft: 'auto',
   },
   category: {
     width: '100%',
@@ -81,6 +85,16 @@ interface Props extends StackScreenProps<RootStackParams, 'CategoryScreen'> {}
 
 const ExploreScreen = (props: Props) => {
   const {top} = useSafeAreaInsets();
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const dispatch = useDispatch();
+
+  const search = () => {
+    dispatch(searchActions.addQuery({query: searchQuery}));
+    dispatch(searchAsyncActions.index({query: searchQuery}));
+    props.navigation.navigate('SearchScreen');
+    setSearchQuery('');
+  };
+
   const categories = React.useMemo(
     () => [
       {
@@ -120,15 +134,15 @@ const ExploreScreen = (props: Props) => {
       style={{backgroundColor: colors.white}}>
       <View style={styles.header}>
         <Typography variant="h2" fontWeight={500} color={colors.deepgrey}>
-          Category
+          Explore
         </Typography>
-        <TouchableOpacity style={styles.iconButton}>
+        {/* <TouchableOpacity style={styles.iconButton}>
           <NotificationIcon
             width={normalizeY(24)}
             height={normalizeY(24)}
             color={colors.deepgrey}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <CachedImage
           source={{
             uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
@@ -149,6 +163,10 @@ const ExploreScreen = (props: Props) => {
         }
         textInputProps={{
           placeholder: 'Search Product',
+          keyboardType: 'web-search',
+          onSubmitEditing: search,
+          value: searchQuery,
+          onChangeText: setSearchQuery,
         }}
       />
       <View style={{marginTop: normalizeY(8)}}>

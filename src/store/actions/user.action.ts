@@ -5,6 +5,7 @@ import {requestActions} from '../slices/request.slice';
 import OkResponse from '../../network/responses/OkResponse';
 import ChangePasswordRequest from '../../network/requests/ChangePasswordRequest';
 import UpdateUserRequest from '../../network/requests/UpdateUserRequest';
+import UpdateUserProfileImageRequest from '../../network/requests/UpdateUserProfileImageRequest';
 
 const changePassword = createAsyncThunk(
   'user/change-password',
@@ -56,9 +57,33 @@ const updateDetails = createAsyncThunk(
   },
 );
 
+const updateProfilePicture = createAsyncThunk(
+  'user/update-profile-picture',
+  async (payload: UpdateUserProfileImageRequest, thunkApi) => {
+    thunkApi.dispatch(requestActions.started(updateProfilePicture.typePrefix));
+    try {
+      const response = await API.client.put<
+        UpdateUserProfileImageRequest,
+        AxiosResponse<OkResponse>
+      >('/user/profile-image', payload);
+
+      thunkApi.dispatch(
+        requestActions.beforeFulfilled(updateProfilePicture.typePrefix),
+      );
+      return response.data;
+    } catch (error) {
+      thunkApi.dispatch(
+        requestActions.beforeRejected(updateProfilePicture.typePrefix),
+      );
+      return thunkApi.rejectWithValue({error});
+    }
+  },
+);
+
 const userAsyncActions = {
   changePassword,
   updateDetails,
+  updateProfilePicture,
 };
 
 export default userAsyncActions;

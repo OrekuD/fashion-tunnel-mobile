@@ -18,6 +18,8 @@ export type RootStackParams = {
   AddNewAddressScreen: undefined;
   CheckoutScreen: undefined;
   OrdersScreen: undefined;
+  SearchScreen: undefined;
+  ProfilePictureScreen: undefined;
   OrderScreen: {orderId: string};
   EditAddressScreen: {userAddressId: string};
   CategoryScreen: {categoryId: ProductCategories.Status};

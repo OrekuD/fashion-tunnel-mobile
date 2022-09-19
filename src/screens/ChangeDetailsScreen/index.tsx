@@ -192,6 +192,25 @@ const ChangeDetailsScreen = (props: Props) => {
               color={colors.black}
             />
           </TouchableOpacity>
+          <Typography
+            variant="h2"
+            color={colors.deepgrey}
+            style={{marginTop: normalizeY(32), marginBottom: normalizeY(24)}}>
+            Profile picture
+          </Typography>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.rowItem}
+            onPress={() => props.navigation.navigate('ProfilePictureScreen')}>
+            <Typography variant="sm" color={colors.black}>
+              Change profile picture
+            </Typography>
+            <ChevronRightIcon
+              width={normalizeY(18)}
+              height={normalizeY(18)}
+              color={colors.black}
+            />
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
       <Button
