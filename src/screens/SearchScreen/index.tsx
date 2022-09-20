@@ -66,7 +66,7 @@ const SearchScreen = (props: Props) => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedCategoryId, setSelectedCategoryId] =
     React.useState<ProductCategories.Status>();
-  const {request, user, search} = useSelectState();
+  const {request, search} = useSelectState();
 
   const [updatedAt] = React.useState(request.updatedAt);
   const dispatch = useDispatch();

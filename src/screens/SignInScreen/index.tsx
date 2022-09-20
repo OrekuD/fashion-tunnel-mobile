@@ -148,6 +148,7 @@ const SignInScreen = (props: Props) => {
                 setPassword(text);
                 setEmailError('');
               },
+              autoCapitalize: 'none',
             }}
             rightIcon={
               <TouchableOpacity

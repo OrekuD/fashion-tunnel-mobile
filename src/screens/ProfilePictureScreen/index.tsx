@@ -22,6 +22,8 @@ import userAsyncActions from '../../store/actions/user.action';
 import RequestManager from '../../store/request-manager';
 import {useSelectState} from '../../store/selectors';
 import {normalizeX, normalizeY} from '../../utils/normalize';
+// @ts-ignore
+import avatar from '../../assets/images/avatar.webp';
 
 const styles = StyleSheet.create({
   container: {
@@ -60,7 +62,7 @@ interface Props
 
 const ProfilePictureScreen = (props: Props) => {
   const {request, user, upload} = useSelectState();
-  const [productImage, setProductImage] = React.useState<Asset>();
+  const [profileImage, setProfileImage] = React.useState<Asset>();
   const [isLoading, setIsLoading] = React.useState(false);
   const {bottom} = useSafeAreaInsets();
 
@@ -94,7 +96,7 @@ const ProfilePictureScreen = (props: Props) => {
     if (RM.isFulfilled(userAsyncActions.updateProfilePicture.typePrefix)) {
       RM.consume(userAsyncActions.updateProfilePicture.typePrefix);
       setIsLoading(false);
-      setProductImage(undefined);
+      setProfileImage(undefined);
       return;
     }
 
@@ -106,23 +108,23 @@ const ProfilePictureScreen = (props: Props) => {
   }, [updatedAt, request.updatedAt]);
 
   const canProceed = React.useMemo(() => {
-    return Boolean(productImage);
-  }, [productImage]);
+    return Boolean(profileImage);
+  }, [profileImage]);
 
   const updateProfilePicture = () => {
     if (!canProceed || isLoading) {
       return;
     }
 
-    if (!productImage?.uri) return;
+    if (!profileImage?.uri) return;
 
     setIsLoading(true);
 
     const formData = new FormData();
     formData.append('images', {
-      uri: `file://${productImage.uri}`,
-      type: productImage?.type,
-      name: productImage.fileName?.split('/').pop(),
+      uri: `file://${profileImage.uri}`,
+      type: profileImage?.type,
+      name: profileImage.fileName?.split('/').pop(),
     });
 
     dispatch(uploadAsyncActions.index(formData));
@@ -133,7 +135,7 @@ const ProfilePictureScreen = (props: Props) => {
       {mediaType: 'photo', quality: 0.6, selectionLimit: 1},
       response => {
         if (response.assets) {
-          setProductImage(response.assets[0]);
+          setProfileImage(response.assets[0]);
         }
       },
     );
@@ -158,7 +160,11 @@ const ProfilePictureScreen = (props: Props) => {
         <View style={styles.profilePictureContainer}>
           <CachedImage
             source={{
-              uri: productImage ? productImage.uri : user.profilePicture,
+              uri: profileImage
+                ? profileImage.uri
+                : user?.profilePicture
+                ? user.profilePicture
+                : avatar,
             }}
             style={styles.profilePicture}
           />

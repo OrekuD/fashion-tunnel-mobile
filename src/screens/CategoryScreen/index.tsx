@@ -72,18 +72,6 @@ const CategoryScreen = (props: Props) => {
     );
   }, [products.list, selectedCategoryId]);
 
-  React.useEffect(() => {
-    // console.log({
-    //   catIds: products.list.map(({productCategory}) => productCategory),
-    //   ids: ProductCategories.State.list(),
-    // });
-    // console.log({
-    //   p: products.list.filter(
-    //     ({productCategory}) => productCategory === selectedCategoryId,
-    //   ),
-    // });
-  }, []);
-
   const categoriesStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(translateY.value, [0, TAB_HEIGHT], [1, 0]),
@@ -120,6 +108,7 @@ const CategoryScreen = (props: Props) => {
       isScrolling.value = false;
     },
   });
+
   return (
     <>
       <AppBar
@@ -166,7 +155,6 @@ const CategoryScreen = (props: Props) => {
           }}>
           {ProductCategories.State.list().map((productCategory, index) => {
             const isActiveCategory = selectedCategoryId === productCategory;
-            // console.log({productCategory, selectedCategoryId});
             return (
               <TouchableOpacity
                 activeOpacity={0.8}

@@ -1,4 +1,4 @@
-import {CPA, ProductsState, SearchState} from './../types';
+import {CPA, SearchState} from './../types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import Product from '../../models/Product';
 import postRequest from '../postRequest';

@@ -11,13 +11,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Typography from '../../components/Typography';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 import colors from '../../constants/colors';
-import {cedi, images, screenheight, screenwidth} from '../../constants';
-import {
-  CartIcon,
-  Logo,
-  NotificationIcon,
-  SearchIcon,
-} from '../../components/Icons';
+import {screenwidth} from '../../constants';
+import {CartIcon, Logo, SearchIcon} from '../../components/Icons';
 import CachedImage from '../../components/CachedImage';
 import TextField from '../../components/TextField';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -29,6 +24,8 @@ import {useDispatch} from 'react-redux';
 import RequestManager from '../../store/request-manager';
 import searchAsyncActions from '../../store/actions/search.action';
 import {searchActions} from '../../store/slices/search.slice';
+// @ts-ignore
+import avatar from '../../assets/images/avatar.webp';
 
 const styles = StyleSheet.create({
   header: {
@@ -144,10 +141,14 @@ const HomeScreen = (props: Props) => {
               />
             </TouchableOpacity> */}
             <CachedImage
-              source={{
-                // uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-                uri: user.profilePicture,
-              }}
+              source={
+                user?.profilePicture
+                  ? {
+                      // uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
+                      uri: user.profilePicture,
+                    }
+                  : avatar
+              }
               style={styles.profileImage}
             />
           </View>

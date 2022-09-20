@@ -21,6 +21,9 @@ import ProductCategories from '../../namespaces/ProductCategories';
 import {useDispatch} from 'react-redux';
 import {searchActions} from '../../store/slices/search.slice';
 import searchAsyncActions from '../../store/actions/search.action';
+import {useSelectState} from '../../store/selectors';
+// @ts-ignore
+import avatar from '../../assets/images/avatar.webp';
 
 const styles = StyleSheet.create({
   header: {
@@ -87,6 +90,7 @@ const ExploreScreen = (props: Props) => {
   const {top} = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = React.useState('');
   const dispatch = useDispatch();
+  const {user} = useSelectState();
 
   const search = () => {
     dispatch(searchActions.addQuery({query: searchQuery}));
@@ -124,6 +128,7 @@ const ExploreScreen = (props: Props) => {
     ],
     [],
   );
+
   return (
     <ScrollView
       contentContainerStyle={{
@@ -144,9 +149,14 @@ const ExploreScreen = (props: Props) => {
           />
         </TouchableOpacity> */}
         <CachedImage
-          source={{
-            uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-          }}
+          source={
+            user?.profilePicture
+              ? {
+                  // uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
+                  uri: user.profilePicture,
+                }
+              : avatar
+          }
           style={styles.profileImage}
         />
       </View>
