@@ -13,7 +13,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
 import {RootStackParams} from '../../../types';
 import AppBar from '../../components/AppBar';
-import BackButton from '../../components/BackButton';
 import Button from '../../components/Button';
 import CachedImage from '../../components/CachedImage';
 import {CancelIcon, MinusIcon, PlusIcon} from '../../components/Icons';
@@ -23,6 +22,7 @@ import colors from '../../constants/colors';
 import ProductCategories from '../../namespaces/ProductCategories';
 import {useSelectState} from '../../store/selectors';
 import {cartActions} from '../../store/slices/cart.slice';
+import formatAmount from '../../utils/formatAmount';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 
 const styles = StyleSheet.create({
@@ -73,7 +73,7 @@ const CartScreen = (props: Props) => {
 
   const summary = React.useMemo(() => {
     const data = [
-      {label: 'Subtotal', value: `${cedi} ${cart.subtotal.toFixed(2)}`},
+      {label: 'Subtotal', value: `${cedi} ${formatAmount(cart.subtotal)}`},
     ];
 
     if (cart.discountPercentage > 0) {
@@ -83,7 +83,7 @@ const CartScreen = (props: Props) => {
       });
       data.push({
         label: 'Discount',
-        value: `${cedi} ${cart.discount.toFixed(2)}`,
+        value: `${cedi} ${formatAmount(cart.discount)}`,
       });
     }
 
@@ -92,8 +92,16 @@ const CartScreen = (props: Props) => {
 
   return (
     <>
-      <AppBar title="Cart" />
-
+      <AppBar
+        title="Cart"
+        subTitle={
+          cart.products.length === 0
+            ? ''
+            : cart.products.length === 1
+            ? '1 item'
+            : `${cart.products.length} items`
+        }
+      />
       {cart.products.length === 0 ? (
         <View
           style={{
@@ -104,9 +112,9 @@ const CartScreen = (props: Props) => {
             backgroundColor: colors.white,
           }}>
           <Typography
-            variant="sm"
-            textAlign="center"
-            style={{marginBottom: normalizeY(24)}}>
+            variant="h1"
+            color={colors.deepgrey}
+            style={{marginBottom: normalizeY(12)}}>
             You currently have no products in your cart
           </Typography>
           <Button
@@ -179,7 +187,7 @@ const CartScreen = (props: Props) => {
                   variant="h1"
                   color={colors.deepgrey}
                   fontWeight={500}>
-                  {`${cedi} ${cart.total.toFixed(2)}`}
+                  {`${cedi} ${formatAmount(cart.total)}`}
                 </Typography>
               </View>
             </Animated.View>

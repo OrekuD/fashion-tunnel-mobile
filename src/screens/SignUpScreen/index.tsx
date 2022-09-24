@@ -70,6 +70,11 @@ const SignUpScreen = (props: Props) => {
     if (RM.isFulfilled(authenticationAsyncActions.signup.typePrefix)) {
       RM.consume(authenticationAsyncActions.signup.typePrefix);
       setIsLoading(false);
+      if (props.navigation.canGoBack()) {
+        props.navigation.goBack();
+      } else {
+        props.navigation.navigate('MainScreen');
+      }
       return;
     }
 
@@ -215,7 +220,7 @@ const SignUpScreen = (props: Props) => {
               </Typography>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => props.navigation.navigate('SignInScreen')}>
+                onPress={() => props.navigation.replace('SignInScreen')}>
                 <Typography
                   variant="sm"
                   color={colors.primary}

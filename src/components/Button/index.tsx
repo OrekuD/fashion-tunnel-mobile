@@ -23,11 +23,20 @@ const styles = StyleSheet.create({
   },
   flatContainer: {
     width: screenwidth - normalizeX(48),
-    height: normalizeY(48),
+    height: normalizeY(44),
     borderRadius: normalizeY(4),
     backgroundColor: colors.deepgrey,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  transparentContainer: {
+    width: screenwidth - normalizeX(48),
+    height: normalizeY(44),
+    borderRadius: normalizeY(4),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: colors.deepgrey,
   },
 });
 
@@ -65,6 +74,31 @@ const Button = (props: Props) => {
       </TouchableOpacity>
     );
   }
+
+  if (props.variant === 'transparent') {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={props.onPress}
+        style={{
+          ...styles.transparentContainer,
+          ...props.style,
+        }}
+        disabled={props.isDisabled}>
+        {props.isLoading ? (
+          <ActivityIndicator size="small" color={colors.deepgrey} />
+        ) : (
+          <Typography
+            variant="sm"
+            color={colors.deepgrey}
+            style={{fontWeight: '600'}}>
+            {props.label}
+          </Typography>
+        )}
+      </TouchableOpacity>
+    );
+  }
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}

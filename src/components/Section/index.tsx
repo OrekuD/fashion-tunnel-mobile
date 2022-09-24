@@ -5,6 +5,7 @@ import {RootStackParams} from '../../../types';
 import {images, cedi, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
 import Product from '../../models/Product';
+import formatAmount from '../../utils/formatAmount';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 import CachedImage from '../CachedImage';
 import Typography from '../Typography';
@@ -96,7 +97,7 @@ const Section = (props: Props) => {
                   fontWeight={500}
                   style={{marginTop: normalizeY(14)}}
                   color={colors.deepgrey}>
-                  {`${cedi} ${product.price}`}
+                  {`${cedi} ${formatAmount(product.price)}`}
                 </Typography>
               </TouchableOpacity>
             </Animated.View>

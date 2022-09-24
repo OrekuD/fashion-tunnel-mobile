@@ -4,7 +4,6 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -17,18 +16,14 @@ import TextField from '../../components/TextField';
 import Typography from '../../components/Typography';
 import isAnyEmpty from '../../utils/isAnyEmpty';
 import {normalizeX, normalizeY} from '../../utils/normalize';
-import API from '../../constants/api';
 import SignInRequest from '../../network/requests/SignInRequest';
-import {AxiosResponse} from 'axios';
-import AuthenticationResponse from '../../network/responses/AuthenticationResponse';
-import {authenticationActions} from '../../store/slices/authentication.slice';
-import {userActions} from '../../store/slices/user.slice';
-import ErrorResponse from '../../network/responses/ErrorResponse';
 import colors from '../../constants/colors';
 import {isAndroid, screenheight} from '../../constants';
 import authenticationAsyncActions from '../../store/actions/authentication.action';
 import {useSelectState} from '../../store/selectors';
 import RequestManager from '../../store/request-manager';
+import BackButton from '../../components/BackButton';
+import userAddressAsyncActions from '../../store/actions/userAddress.action';
 
 const styles = StyleSheet.create({
   container: {
@@ -67,7 +62,13 @@ const SignInScreen = (props: Props) => {
 
     if (RM.isFulfilled(authenticationAsyncActions.signin.typePrefix)) {
       RM.consume(authenticationAsyncActions.signin.typePrefix);
+      dispatch(userAddressAsyncActions.index());
       setIsLoading(false);
+      if (props.navigation.canGoBack()) {
+        props.navigation.goBack();
+      } else {
+        props.navigation.navigate('MainScreen');
+      }
       return;
     }
 
@@ -101,100 +102,109 @@ const SignInScreen = (props: Props) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior="height">
-      <ScrollView
-        contentContainerStyle={{
-          // flex: 1,
-          paddingTop: normalizeY(24) + top + screenheight * 0.15,
+    <>
+      <BackButton
+        onPress={() => {
+          if (props.navigation.canGoBack()) {
+            props.navigation.goBack();
+          }
         }}
-        style={{backgroundColor: colors.white}}>
-        <View style={styles.container}>
-          <Typography
-            variant="h2"
-            color={colors.deepgrey}
-            fontWeight={600}
-            textAlign="center"
-            style={{marginBottom: normalizeY(24)}}>
-            Welcome back
-          </Typography>
-          <TextField
-            name="E-mail"
-            textInputProps={{
-              placeholder: 'Enter your e-mail',
-              keyboardType: 'email-address',
-              value: email,
-              onChangeText: text => {
-                setEmail(text);
-                setEmailError('');
-              },
-              autoCapitalize: 'none',
-            }}
-            rightIcon={
-              <MailIcon
-                width={normalizeY(24)}
-                height={normalizeY(24)}
-                color={colors.grey}
-              />
-            }
-            error={emailError}
-          />
-          <TextField
-            name="Password"
-            textInputProps={{
-              placeholder: 'Enter your password',
-              secureTextEntry: !showPassword,
-              value: password,
-              onChangeText: text => {
-                setPassword(text);
-                setEmailError('');
-              },
-              autoCapitalize: 'none',
-            }}
-            rightIcon={
+      />
+      <KeyboardAvoidingView style={{flex: 1}} behavior="height">
+        <ScrollView
+          contentContainerStyle={{
+            // flex: 1,
+            paddingTop: normalizeY(24) + top + screenheight * 0.15,
+          }}
+          style={{backgroundColor: colors.white}}>
+          <View style={styles.container}>
+            <Typography
+              variant="h2"
+              color={colors.deepgrey}
+              fontWeight={600}
+              textAlign="center"
+              style={{marginBottom: normalizeY(24)}}>
+              Welcome back
+            </Typography>
+            <TextField
+              name="E-mail"
+              textInputProps={{
+                placeholder: 'Enter your e-mail',
+                keyboardType: 'email-address',
+                value: email,
+                onChangeText: text => {
+                  setEmail(text);
+                  setEmailError('');
+                },
+                autoCapitalize: 'none',
+              }}
+              rightIcon={
+                <MailIcon
+                  width={normalizeY(24)}
+                  height={normalizeY(24)}
+                  color={colors.grey}
+                />
+              }
+              error={emailError}
+            />
+            <TextField
+              name="Password"
+              textInputProps={{
+                placeholder: 'Enter your password',
+                secureTextEntry: !showPassword,
+                value: password,
+                onChangeText: text => {
+                  setPassword(text);
+                  setEmailError('');
+                },
+                autoCapitalize: 'none',
+              }}
+              rightIcon={
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => setShowPassword(!showPassword)}>
+                  {!showPassword ? (
+                    <EyeCancelIcon
+                      width={normalizeY(24)}
+                      height={normalizeY(24)}
+                      color={colors.grey}
+                    />
+                  ) : (
+                    <EyeIcon
+                      width={normalizeY(24)}
+                      height={normalizeY(24)}
+                      color={colors.grey}
+                    />
+                  )}
+                </TouchableOpacity>
+              }
+            />
+            <View style={styles.row}>
+              <Typography variant="sm" color={colors.black} textAlign="center">
+                Don't have an account?{' '}
+              </Typography>
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => setShowPassword(!showPassword)}>
-                {!showPassword ? (
-                  <EyeCancelIcon
-                    width={normalizeY(24)}
-                    height={normalizeY(24)}
-                    color={colors.grey}
-                  />
-                ) : (
-                  <EyeIcon
-                    width={normalizeY(24)}
-                    height={normalizeY(24)}
-                    color={colors.grey}
-                  />
-                )}
+                onPress={() => props.navigation.replace('SignUpScreen')}>
+                <Typography
+                  variant="sm"
+                  color={colors.primary}
+                  textAlign="center">
+                  Create one
+                </Typography>
               </TouchableOpacity>
-            }
-          />
-          <View style={styles.row}>
-            <Typography variant="sm" color={colors.black} textAlign="center">
-              Don't have an account?{' '}
-            </Typography>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => props.navigation.navigate('SignUpScreen')}>
-              <Typography
-                variant="sm"
-                color={colors.primary}
-                textAlign="center">
-                Create one
-              </Typography>
-            </TouchableOpacity>
+            </View>
+            <Button
+              label="Sign in"
+              variant="rounded"
+              onPress={handleSubmit}
+              isDisabled={isLoading || !canProceed}
+              isLoading={isLoading}
+            />
           </View>
-          <Button
-            label="Sign in"
-            variant="rounded"
-            onPress={handleSubmit}
-            isDisabled={isLoading || !canProceed}
-            isLoading={isLoading}
-          />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 

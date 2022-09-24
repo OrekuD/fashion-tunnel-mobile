@@ -1,39 +1,34 @@
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {
-  Image,
-  ImageRequireSource,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useDispatch} from 'react-redux';
-import {BottomTabsParams} from '../../types';
-import {screenwidth} from '../constants';
-import colors from '../constants/colors';
-import {normalizeX, normalizeY} from '../utils/normalize';
-import {CartIcon, ExploreIcon, HeartIcon, HomeIcon, UserIcon} from './Icons';
-import Typography from './Typography';
+import {BottomTabsParams} from '../../../types';
+import {screenwidth} from '../../constants';
+import colors from '../../constants/colors';
+import {normalizeX, normalizeY} from '../../utils/normalize';
+import {
+  HomeIcon,
+  ExploreIcon,
+  HeartIcon,
+  UserIcon,
+  DashboardIcon,
+} from '../Icons';
+import Typography from '../Typography';
 
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    left: normalizeX(18),
+    left: 0,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-evenly',
-    width: screenwidth - normalizeX(36),
-    height: normalizeY(66),
-    borderRadius: normalizeY(66 / 2),
+    width: screenwidth,
+    // height: normalizeY(66),
     paddingHorizontal: normalizeX(16),
     zIndex: 10000,
-    backgroundColor: colors.deepgrey,
-    shadowColor: colors.grey,
-    shadowOffset: {width: 10, height: 10},
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    backgroundColor: colors.white,
+    paddingTop: normalizeY(16),
   },
   tab: {
     flex: 1,
@@ -45,8 +40,8 @@ const styles = StyleSheet.create({
     height: normalizeY(8),
     width: normalizeY(8),
     borderRadius: normalizeY(8 / 2),
-    backgroundColor: colors.orange,
-    marginBottom: normalizeY(6),
+    backgroundColor: 'rgba(41,	37,	37, 0.8)',
+    marginTop: normalizeY(6),
   },
   indicatorWrapper: {
     width: screenwidth,
@@ -65,11 +60,6 @@ const styles = StyleSheet.create({
 
 const BottomTabbar = (props: BottomTabBarProps) => {
   const {bottom} = useSafeAreaInsets();
-  const HEIGHT = React.useMemo(
-    () => normalizeY(40) + (bottom || normalizeY(12)) + normalizeY(16),
-    [bottom],
-  );
-
   type Route = {
     icon: typeof HomeIcon;
     route: keyof BottomTabsParams;
@@ -84,13 +74,13 @@ const BottomTabbar = (props: BottomTabBarProps) => {
         label: 'Home',
       },
       {
-        icon: ExploreIcon,
+        icon: DashboardIcon,
         route: 'ExploreScreen',
         label: 'Explore',
       },
       {
         icon: HeartIcon,
-        route: 'FavouritesScreen',
+        route: 'WishlistScreen',
         label: 'Wishlist',
       },
       {
@@ -119,8 +109,11 @@ const BottomTabbar = (props: BottomTabBarProps) => {
       <View
         style={{
           ...styles.container,
+          paddingBottom: (bottom || normalizeY(12)) + normalizeY(10),
           // height: HEIGHT,
-          bottom: bottom || normalizeY(12),
+          // bottom: bottom || normalizeY(12),
+          bottom: 0,
+          // backgroundColor: 'red',
         }}>
         {routes.map(({icon: Icon, route, label}, index) => {
           const isFocused = props.state.index === index;
@@ -130,23 +123,15 @@ const BottomTabbar = (props: BottomTabBarProps) => {
               key={index}
               onPress={() => props.navigation.navigate(route)}
               style={styles.tab}>
-              {isFocused ? (
-                <>
-                  <View style={styles.activeIndicator} />
-                  <Typography
-                    variant="sm"
-                    fontWeight={500}
-                    color={colors.white}>
-                    {label.toUpperCase()}
-                  </Typography>
-                </>
-              ) : (
-                <Icon
-                  width={normalizeY(24)}
-                  height={normalizeY(24)}
-                  color="#B9B6B8"
-                />
-              )}
+              <Icon
+                width={normalizeY(26)}
+                height={normalizeY(26)}
+                color={isFocused ? 'rgba(41,	37,	37, 0.8)' : '#B9B6B8'}
+                fill={isFocused ? 'rgba(41,	37,	37, 0.15)' : ''}
+              />
+              <View
+                style={{...styles.activeIndicator, opacity: isFocused ? 1 : 0}}
+              />
             </TouchableOpacity>
           );
         })}

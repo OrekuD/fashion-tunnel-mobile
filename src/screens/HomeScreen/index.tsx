@@ -133,13 +133,6 @@ const HomeScreen = (props: Props) => {
         <View style={{paddingHorizontal: normalizeX(24)}}>
           <View style={styles.header}>
             <Logo scale={2} color={colors.deepgrey} />
-            {/* <TouchableOpacity style={styles.iconButton}>
-              <NotificationIcon
-                width={normalizeY(24)}
-                height={normalizeY(24)}
-                color={colors.deepgrey}
-              />
-            </TouchableOpacity> */}
             <CachedImage
               source={
                 user?.profilePicture

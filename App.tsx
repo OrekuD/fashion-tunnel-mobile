@@ -1,11 +1,10 @@
+import React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {AxiosResponse} from 'axios';
-import React from 'react';
 import {useDispatch} from 'react-redux';
-import BottomTabbar from './src/components/BottomTabbar';
 import CartScreen from './src/screens/CartScreen';
 import CategoryScreen from './src/screens/CategoryScreen';
 import ExploreScreen from './src/screens/ExploreScreen';
@@ -28,11 +27,11 @@ import AddNewAddressScreen from './src/screens/AddNewAddressScreen';
 import EditAddressScreen from './src/screens/EditAddressScreen';
 import CheckoutScreen from './src/screens/CheckoutScreen';
 import OrderScreen from './src/screens/OrderScreen';
-import FavouritesScreen from './src/screens/FavouritesScreen';
-import {REACT_APP_API_URL} from '@env';
-import {StatusBar} from 'react-native';
+import WishlistScreen from './src/screens/WishlistScreen';
 import ProfilePictureScreen from './src/screens/ProfilePictureScreen';
 import SearchScreen from './src/screens/SearchScreen';
+import FloatingBottomTabbar from './src/components/FloatingBottomTabbar';
+import BottomTabbar from './src/components/BottomTabbar';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();
@@ -47,7 +46,7 @@ const BottomTabNavigation = () => {
       tabBar={props => <BottomTabbar {...props} />}>
       <BottomTab.Screen name="HomeScreen" component={HomeScreen} />
       <BottomTab.Screen name="ExploreScreen" component={ExploreScreen} />
-      <BottomTab.Screen name="FavouritesScreen" component={FavouritesScreen} />
+      <BottomTab.Screen name="WishlistScreen" component={WishlistScreen} />
       <BottomTab.Screen name="ProfileScreen" component={ProfileScreen} />
     </BottomTab.Navigator>
   );
@@ -89,55 +88,39 @@ const RootStackNavigation = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-      }}>
-      {/* <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} /> */}
-      {authentication.isAuthenticated ? (
-        <>
-          <Stack.Screen name="MainScreen" component={BottomTabNavigation} />
-          <Stack.Screen name="CartScreen" component={CartScreen} />
-          <Stack.Screen name="ProductScreen" component={ProductScreen} />
-          <Stack.Screen name="SizeGuideScreen" component={SizeGuideScreen} />
-          <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
-          <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
-          <Stack.Screen name="OrderScreen" component={OrderScreen} />
-          <Stack.Screen name="OrdersScreen" component={OrdersScreen} />
-          <Stack.Screen
-            name="EditAddressScreen"
-            component={EditAddressScreen}
-          />
-          <Stack.Screen
-            name="AddNewAddressScreen"
-            component={AddNewAddressScreen}
-          />
-          <Stack.Screen
-            name="AddressBookScreen"
-            component={AddressBookScreen}
-          />
-          <Stack.Screen
-            name="ChangePasswordScreen"
-            component={ChangePasswordScreen}
-          />
-          <Stack.Screen
-            name="ChangeDetailsScreen"
-            component={ChangeDetailsScreen}
-          />
-          <Stack.Screen
-            name="ProfilePictureScreen"
-            component={ProfilePictureScreen}
-          />
-          <Stack.Screen name="SearchScreen" component={SearchScreen} />
-        </>
-      ) : (
-        <>
-          {ui.isFirstLaunch && (
-            <Stack.Screen
-              name="OnboardingScreen"
-              component={OnboardingScreen}
-            />
-          )}
-          <Stack.Screen name="SignInScreen" component={SignInScreen} />
-          <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-        </>
+      }}
+      initialRouteName={ui.isFirstLaunch ? 'OnboardingScreen' : 'MainScreen'}>
+      <Stack.Screen name="MainScreen" component={BottomTabNavigation} />
+      <Stack.Screen name="CartScreen" component={CartScreen} />
+      <Stack.Screen name="ProductScreen" component={ProductScreen} />
+      <Stack.Screen name="SizeGuideScreen" component={SizeGuideScreen} />
+      <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
+      <Stack.Screen name="CheckoutScreen" component={CheckoutScreen} />
+      <Stack.Screen name="OrderScreen" component={OrderScreen} />
+      <Stack.Screen name="OrdersScreen" component={OrdersScreen} />
+      <Stack.Screen name="EditAddressScreen" component={EditAddressScreen} />
+      <Stack.Screen
+        name="AddNewAddressScreen"
+        component={AddNewAddressScreen}
+      />
+      <Stack.Screen name="AddressBookScreen" component={AddressBookScreen} />
+      <Stack.Screen
+        name="ChangePasswordScreen"
+        component={ChangePasswordScreen}
+      />
+      <Stack.Screen
+        name="ChangeDetailsScreen"
+        component={ChangeDetailsScreen}
+      />
+      <Stack.Screen
+        name="ProfilePictureScreen"
+        component={ProfilePictureScreen}
+      />
+      <Stack.Screen name="SearchScreen" component={SearchScreen} />
+      <Stack.Screen name="SignInScreen" component={SignInScreen} />
+      <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+      {ui.isFirstLaunch && (
+        <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} />
       )}
     </Stack.Navigator>
   );

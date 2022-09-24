@@ -24,6 +24,7 @@ import searchAsyncActions from '../../store/actions/search.action';
 import {useSelectState} from '../../store/selectors';
 // @ts-ignore
 import avatar from '../../assets/images/avatar.webp';
+import AppBar from '../../components/AppBar';
 
 const styles = StyleSheet.create({
   header: {
@@ -130,24 +131,19 @@ const ExploreScreen = (props: Props) => {
   );
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        paddingTop: top,
-        paddingHorizontal: normalizeX(24),
-        paddingBottom: normalizeY(120),
-      }}
-      style={{backgroundColor: colors.white}}>
-      <View style={styles.header}>
+    <>
+      <AppBar title="Explore" noBackButton />
+      <ScrollView
+        contentContainerStyle={{
+          // paddingTop: top,
+          // paddingHorizontal: normalizeX(24),
+          paddingBottom: normalizeY(120),
+        }}
+        style={{backgroundColor: colors.white}}>
+        {/* <View style={styles.header}>
         <Typography variant="h2" fontWeight={500} color={colors.deepgrey}>
           Explore
         </Typography>
-        {/* <TouchableOpacity style={styles.iconButton}>
-          <NotificationIcon
-            width={normalizeY(24)}
-            height={normalizeY(24)}
-            color={colors.deepgrey}
-          />
-        </TouchableOpacity> */}
         <CachedImage
           source={
             user?.profilePicture
@@ -159,60 +155,66 @@ const ExploreScreen = (props: Props) => {
           }
           style={styles.profileImage}
         />
-      </View>
-      <TextField
-        name=""
-        rounded
-        leftIcon={
-          <SearchIcon
-            width={normalizeY(24)}
-            height={normalizeY(24)}
-            color={colors.deepgrey}
-            style={{marginRight: normalizeX(12)}}
-          />
-        }
-        textInputProps={{
-          placeholder: 'Search Product',
-          keyboardType: 'web-search',
-          onSubmitEditing: search,
-          value: searchQuery,
-          onChangeText: setSearchQuery,
-        }}
-      />
-      <View style={{marginTop: normalizeY(8)}}>
-        {categories.map(({name, productsLength, uri, id}, index) => (
-          <TouchableOpacity
-            style={styles.category}
-            activeOpacity={0.9}
-            onPress={() =>
-              props.navigation.navigate('CategoryScreen', {
-                categoryId: id,
-              })
+      </View> */}
+        <View style={{paddingHorizontal: normalizeX(24)}}>
+          <TextField
+            name=""
+            rounded
+            leftIcon={
+              <SearchIcon
+                width={normalizeY(24)}
+                height={normalizeY(24)}
+                color={colors.deepgrey}
+                style={{marginRight: normalizeX(12)}}
+              />
             }
-            key={index}>
-            <CachedImage source={{uri}} style={styles.image} />
-            <View style={styles.content}>
-              <Typography variant="h2" color={colors.white} fontWeight={600}>
-                {name.toUpperCase()}
-              </Typography>
-              <Typography variant="sm" color={colors.white}>
-                {productsLength} products
-              </Typography>
-            </View>
-            <LinearGradient
-              style={styles.gradient}
-              colors={[
-                'rgba(26, 26, 26, 0.15)',
-                'rgba(26, 26, 26, 0.1)',
-                'rgba(26, 26, 26, 0.1)',
-                'rgba(26, 26, 26, 0.4)',
-                'rgba(26, 26, 26, 0.6)',
-              ]}
-            />
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+            textInputProps={{
+              placeholder: 'Search Product',
+              keyboardType: 'web-search',
+              onSubmitEditing: search,
+              value: searchQuery,
+              onChangeText: setSearchQuery,
+            }}
+          />
+          <View style={{marginTop: normalizeY(8)}}>
+            {categories.map(({name, productsLength, uri, id}, index) => (
+              <TouchableOpacity
+                style={styles.category}
+                activeOpacity={0.9}
+                onPress={() =>
+                  props.navigation.navigate('CategoryScreen', {
+                    categoryId: id,
+                  })
+                }
+                key={index}>
+                <CachedImage source={{uri}} style={styles.image} />
+                <View style={styles.content}>
+                  <Typography
+                    variant="h2"
+                    color={colors.white}
+                    fontWeight={600}>
+                    {name.toUpperCase()}
+                  </Typography>
+                  <Typography variant="sm" color={colors.white}>
+                    {productsLength} products
+                  </Typography>
+                </View>
+                <LinearGradient
+                  style={styles.gradient}
+                  colors={[
+                    'rgba(26, 26, 26, 0.15)',
+                    'rgba(26, 26, 26, 0.1)',
+                    'rgba(26, 26, 26, 0.1)',
+                    'rgba(26, 26, 26, 0.4)',
+                    'rgba(26, 26, 26, 0.6)',
+                  ]}
+                />
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+    </>
   );
 };
 

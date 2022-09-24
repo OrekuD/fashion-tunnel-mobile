@@ -30,7 +30,7 @@ export type RootStackParams = {
 export type BottomTabsParams = {
   HomeScreen: undefined;
   ExploreScreen: undefined;
-  FavouritesScreen: undefined;
+  WishlistScreen: undefined;
   ProfileScreen: undefined;
 };
 

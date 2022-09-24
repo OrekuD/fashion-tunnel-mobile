@@ -5,6 +5,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {cedi, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
 import Product from '../../models/Product';
+import formatAmount from '../../utils/formatAmount';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 import CachedImage from '../CachedImage';
 import {ChevronRightIcon} from '../Icons';
@@ -65,7 +66,7 @@ const ProductCard = (props: Props) => {
         fontWeight={500}
         style={{marginTop: 'auto'}}
         color={colors.deepgrey}>
-        {`${cedi} ${props.product.price.toFixed(2)}`}
+        {`${cedi} ${formatAmount(props.product.price)}`}
       </Typography>
     </TouchableOpacity>
   );

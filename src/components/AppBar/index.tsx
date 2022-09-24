@@ -37,6 +37,7 @@ interface Props {
   title: string;
   subTitle?: string;
   onBackButtonPressed?: () => void;
+  noBackButton?: boolean;
 }
 
 const AppBar = (props: Props) => {
@@ -50,16 +51,19 @@ const AppBar = (props: Props) => {
         paddingTop: top + normalizeY(10),
         height: top + (isAndroid ? normalizeY(64) : normalizeY(48)),
       }}>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={props.onBackButtonPressed || navigate.goBack}>
-        <ChevronRightIcon
-          width={normalizeY(26)}
-          height={normalizeY(26)}
-          color={colors.black}
-          style={{transform: [{rotate: '180deg'}]}}
-        />
-      </TouchableOpacity>
+      {props?.noBackButton ? null : (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{marginBottom: normalizeY(6)}}
+          onPress={props.onBackButtonPressed || navigate.goBack}>
+          <ChevronRightIcon
+            width={normalizeY(26)}
+            height={normalizeY(26)}
+            color={colors.black}
+            style={{transform: [{rotate: '180deg'}]}}
+          />
+        </TouchableOpacity>
+      )}
       <View
         pointerEvents="none"
         style={{

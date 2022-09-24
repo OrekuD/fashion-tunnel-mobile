@@ -22,6 +22,7 @@ import CreateOrderRequest from '../../network/requests/CreateOrderRequest';
 import ordersAsyncActions from '../../store/actions/orders.action';
 import RequestManager from '../../store/request-manager';
 import {useSelectState} from '../../store/selectors';
+import formatAmount from '../../utils/formatAmount';
 import {normalizeX, normalizeY} from '../../utils/normalize';
 
 const styles = StyleSheet.create({
@@ -59,12 +60,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: normalizeY(6),
   },
+  row: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
 });
 
 interface Props extends StackScreenProps<RootStackParams, 'CheckoutScreen'> {}
 
 const CheckoutScreen = (props: Props) => {
-  const {cart, userAddress, request, orders} = useSelectState();
+  const {cart, userAddress, request, orders, authentication} = useSelectState();
   const {bottom} = useSafeAreaInsets();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = React.useState(false);
@@ -119,7 +126,7 @@ const CheckoutScreen = (props: Props) => {
 
   const summary = React.useMemo(() => {
     const data = [
-      {label: 'Subtotal', value: `${cedi} ${cart.subtotal.toFixed(2)}`},
+      {label: 'Subtotal', value: `${cedi} ${formatAmount(cart.subtotal)}`},
     ];
 
     if (cart.discountPercentage > 0) {
@@ -129,7 +136,7 @@ const CheckoutScreen = (props: Props) => {
       });
       data.push({
         label: 'Discount',
-        value: `${cedi} ${cart.discount.toFixed(2)}`,
+        value: `${cedi} ${formatAmount(cart.discount)}`,
       });
     }
 
@@ -183,7 +190,7 @@ const CheckoutScreen = (props: Props) => {
               Total
             </Typography>
             <Typography variant="sm" color={colors.deepgrey} fontWeight={500}>
-              {`${cedi} ${cart.total.toFixed(2)}`}
+              {`${cedi} ${formatAmount(cart.total)}`}
             </Typography>
           </View>
         </View>
@@ -211,64 +218,90 @@ const CheckoutScreen = (props: Props) => {
             </View>
           );
         })}
-        <Typography
-          variant="h2"
-          color={colors.deepgrey}
-          style={{marginTop: normalizeY(24), marginBottom: normalizeY(12)}}>
-          Delivery details
-        </Typography>
-        {activeAddress ? (
+        {authentication.isAuthenticated ? (
           <>
-            <View style={styles.address}>
-              <View style={{flex: 1}}>
-                <Typography
-                  variant="sm"
-                  fontWeight={500}
-                  color={colors.deepgrey}>
-                  {activeAddress.name}
-                </Typography>
-                <Typography variant="sm" color={colors.deepgrey}>
-                  {activeAddress.addressLine}
-                </Typography>
-                <Typography variant="sm" color={colors.deepgrey}>
-                  {activeAddress.postalCode}
-                </Typography>
-              </View>
-              <RadioButton isChecked />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => props.navigation.navigate('AddressBookScreen')}
-              style={{marginTop: normalizeY(12)}}>
-              <Typography variant="sm" color={colors.primary}>
-                Change
-              </Typography>
-            </TouchableOpacity>
+            <Typography
+              variant="h2"
+              color={colors.deepgrey}
+              style={{marginTop: normalizeY(24), marginBottom: normalizeY(12)}}>
+              Delivery details
+            </Typography>
+            {activeAddress ? (
+              <>
+                <View style={styles.address}>
+                  <View style={{flex: 1}}>
+                    <Typography
+                      variant="sm"
+                      fontWeight={500}
+                      color={colors.deepgrey}>
+                      {activeAddress.name}
+                    </Typography>
+                    <Typography variant="sm" color={colors.deepgrey}>
+                      {activeAddress.addressLine}
+                    </Typography>
+                    <Typography variant="sm" color={colors.deepgrey}>
+                      {activeAddress.postalCode}
+                    </Typography>
+                  </View>
+                  <RadioButton isChecked />
+                </View>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() => props.navigation.navigate('AddressBookScreen')}
+                  style={{marginTop: normalizeY(12)}}>
+                  <Typography variant="sm" color={colors.primary}>
+                    Change
+                  </Typography>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Typography variant="sm">No addresses set</Typography>
+                <Button
+                  label="Add one"
+                  variant="flat"
+                  onPress={() => props.navigation.navigate('AddressBookScreen')}
+                  style={{marginTop: normalizeY(12)}}
+                />
+              </>
+            )}
           </>
         ) : (
           <>
-            <Typography variant="sm">No addresses set</Typography>
-            <Button
-              label="Add one"
-              variant="flat"
-              onPress={() => props.navigation.navigate('AddressBookScreen')}
-              style={{marginTop: normalizeY(12)}}
-            />
+            <Typography variant="h1" style={{marginVertical: normalizeY(14)}}>
+              You have to log into your account to continue
+            </Typography>
+            <View style={styles.row}>
+              <Button
+                label="Create one"
+                onPress={() => props.navigation.navigate('SignUpScreen')}
+                variant="transparent"
+                style={{width: '48%'}}
+              />
+              <Button
+                label="Sign in"
+                onPress={() => props.navigation.navigate('SignInScreen')}
+                variant="flat"
+                style={{width: '48%'}}
+              />
+            </View>
           </>
         )}
       </ScrollView>
-      <Button
-        variant="flat"
-        label="Confirm"
-        isLoading={isLoading}
-        isDisabled={isLoading || !canProceed}
-        onPress={handleSubmit}
-        style={{
-          marginTop: normalizeY(12),
-          alignSelf: 'center',
-          marginBottom: (bottom || normalizeY(12)) + normalizeY(12),
-        }}
-      />
+      {authentication.isAuthenticated ? (
+        <Button
+          variant="flat"
+          label="Confirm"
+          isLoading={isLoading}
+          isDisabled={isLoading || !canProceed}
+          onPress={handleSubmit}
+          style={{
+            marginTop: normalizeY(12),
+            alignSelf: 'center',
+            marginBottom: (bottom || normalizeY(12)) + normalizeY(12),
+          }}
+        />
+      ) : null}
     </View>
   );
 };

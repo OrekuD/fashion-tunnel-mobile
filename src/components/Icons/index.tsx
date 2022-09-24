@@ -17,6 +17,7 @@ export interface LogoProps {
 
 export interface SvgProps extends BaseSvgProps {
   color: string;
+  fill?: string;
 }
 
 export const EyeIcon = (props: SvgProps) => (
@@ -231,7 +232,7 @@ export const UserIcon = (props: SvgProps) => (
     height={props.height}
     style={props.style}
     viewBox="0 0 24 24"
-    fill="none">
+    fill={props.fill || 'none'}>
     <Path
       id="Stroke 1"
       fillRule="evenodd"
@@ -255,13 +256,63 @@ export const UserIcon = (props: SvgProps) => (
   </Svg>
 );
 
+export const DashboardIcon = (props: SvgProps) => (
+  <Svg
+    width={props.width}
+    height={props.height}
+    style={props.style}
+    viewBox="0 0 24 24"
+    fill={props.fill || 'none'}>
+    <Path
+      id="Stroke 1"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M3 6.5C3 3.87479 3.02811 3 6.5 3C9.97189 3 10 3.87479 10 6.5C10 9.12521 10.0111 10 6.5 10C2.98893 10 3 9.12521 3 6.5Z"
+      stroke={props.color}
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Stroke 3"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M14 6.5C14 3.87479 14.0281 3 17.5 3C20.9719 3 21 3.87479 21 6.5C21 9.12521 21.0111 10 17.5 10C13.9889 10 14 9.12521 14 6.5Z"
+      stroke={props.color}
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Stroke 5"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M3 17.5C3 14.8748 3.02811 14 6.5 14C9.97189 14 10 14.8748 10 17.5C10 20.1252 10.0111 21 6.5 21C2.98893 21 3 20.1252 3 17.5Z"
+      stroke={props.color}
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      id="Stroke 7"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M14 17.5C14 14.8748 14.0281 14 17.5 14C20.9719 14 21 14.8748 21 17.5C21 20.1252 21.0111 21 17.5 21C13.9889 21 14 20.1252 14 17.5Z"
+      stroke={props.color}
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
 export const HeartIcon = (props: SvgProps) => (
   <Svg
     width={props.width}
     height={props.height}
     style={props.style}
     viewBox="0 0 24 24"
-    fill="none">
+    fill={props.fill || 'none'}>
     <Path
       id="Stroke 1"
       fillRule="evenodd"
@@ -510,7 +561,7 @@ export const HomeIcon = (props: SvgProps) => (
     height={props.height}
     style={props.style}
     viewBox="0 0 24 24"
-    fill="none">
+    fill={props.fill || 'none'}>
     <Path
       id="Home_2"
       d="M9.15722 20.7714V17.7047C9.1572 16.9246 9.79312 16.2908 10.581 16.2856H13.4671C14.2587 16.2856 14.9005 16.9209 14.9005 17.7047V17.7047V20.7809C14.9003 21.4432 15.4343 21.9845 16.103 22H18.0271C19.9451 22 21.5 20.4607 21.5 18.5618V18.5618V9.83784C21.4898 9.09083 21.1355 8.38935 20.538 7.93303L13.9577 2.6853C12.8049 1.77157 11.1662 1.77157 10.0134 2.6853L3.46203 7.94256C2.86226 8.39702 2.50739 9.09967 2.5 9.84736V18.5618C2.5 20.4607 4.05488 22 5.97291 22H7.89696C8.58235 22 9.13797 21.4499 9.13797 20.7714V20.7714"
