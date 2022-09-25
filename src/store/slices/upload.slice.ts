@@ -1,7 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import ImageUploadResponse from '../../network/responses/ImageUploadResponse';
 import ErrorResponse from '../../network/responses/ErrorResponse';
-import productsAsyncActions from '../actions/products.action';
 import uploadAsyncActions from '../actions/upload.action';
 import userAsyncActions from '../actions/user.action';
 import postErrorRequest from '../postErrorRequest';
@@ -35,7 +34,7 @@ const slice = createSlice({
       postErrorRequest(state, action, initialState);
     },
     [userAsyncActions.updateProfilePicture.fulfilled.type]: () => initialState,
-    [userAsyncActions.updateProfilePicture.rejected.type]: () => initialState,
+    // [userAsyncActions.updateProfilePicture.rejected.type]: () => initialState,
   },
 });
 

@@ -2,26 +2,21 @@ import {StackScreenProps} from '@react-navigation/stack';
 import React from 'react';
 import {
   Animated,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
   StatusBar,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
 import {RootStackParams} from '../../../types';
-import BackButton from '../../components/BackButton';
 import CachedImage from '../../components/CachedImage';
 import {
-  ArrowLeftIcon,
   ArrowRightIcon,
   BagIcon,
-  CartIcon,
   ChevronRightIcon,
   HeartFilledIcon,
   HeartIcon,
@@ -29,6 +24,7 @@ import {
   PlusIcon,
   TrashIcon,
 } from '../../components/Icons';
+import SignInRequiredBottomSheet from '../../components/SignInRequiredBottomSheet';
 import Typography from '../../components/Typography';
 import {cedi, isAndroid, screenheight, screenwidth} from '../../constants';
 import colors from '../../constants/colors';
@@ -158,19 +154,14 @@ const ProductScreen = (props: Props) => {
   const [activeSectionIndexes, setActiveSectionIndexes] = React.useState<
     Array<number>
   >([0, 1]);
-  const {products, favourites, request, cart} = useSelectState();
+  const {products, favourites, request, cart, authentication} =
+    useSelectState();
   const dispatch = useDispatch();
   const [product, setProduct] = React.useState<Product>();
   const [updatedAt] = React.useState(request.updatedAt);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [showBottomSheet, setShowBottomSheet] = React.useState(false);
   const [quantity, setQuantity] = React.useState(1);
-
-  // const images = [
-  //   'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736957_1000.jpg',
-  //   'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736952_1000.jpg',
-  //   'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736887_1000.jpg',
-  //   'https://cdn-images.farfetch-contents.com/18/49/36/17/18493617_39736927_1000.jpg',
-  // ];
 
   const isItemInCart = React.useMemo(
     () =>
@@ -374,148 +365,161 @@ const ProductScreen = (props: Props) => {
     );
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" translucent />
-      <View
-        style={{
-          ...styles.header,
-          paddingTop: top + normalizeY(isAndroid ? 12 : 4),
-        }}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.backButton}
-          onPress={props.navigation.goBack}>
-          <ArrowRightIcon
-            width={normalizeY(22)}
-            height={normalizeY(22)}
-            color={colors.white}
-            style={{
-              transform: [{rotate: '180deg'}],
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.backButton}
-          onPress={() => {
-            dispatch(favouritesActions.updateFavourites({product}));
-            dispatch(favouritesAsyncActions.updateFavourites(product.id));
-          }}>
-          {isItemInFavourites ? (
-            <HeartFilledIcon
-              width={normalizeY(18)}
-              height={normalizeY(18)}
-              color={colors.error}
-            />
-          ) : (
-            <HeartIcon
-              width={normalizeY(18)}
-              height={normalizeY(18)}
-              color={colors.white}
-            />
-          )}
-        </TouchableOpacity>
-      </View>
-      <Animated.ScrollView
-        contentContainerStyle={{
-          paddingBottom: (bottom || normalizeY(12)) + normalizeY(120),
-          paddingTop: top,
-        }}
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {
-            useNativeDriver: true,
-          },
-        )}>
-        <Animated.View
-          style={{
-            width: '100%',
-            transform: [
-              {
-                translateY: scrollY.interpolate({
-                  inputRange: [0, screenheight * 0.6],
-                  outputRange: [0, screenheight * 0.45],
-                  extrapolate: 'clamp',
-                }),
-              },
-            ],
-          }}>
-          <Animated.ScrollView
-            scrollEventThrottle={16}
-            onScroll={Animated.event(
-              [{nativeEvent: {contentOffset: {x: scrollX}}}],
-              {
-                useNativeDriver: true,
-              },
-            )}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}>
-            {product.images.map(uri => (
-              <CachedImage key={uri} source={{uri}} style={styles.image} />
-            ))}
-          </Animated.ScrollView>
-          <View style={styles.pagination}>
-            {product.images.map((_, index) => {
-              const {opacity} = animate(index);
-              return (
-                <Animated.View style={{...styles.dot, opacity}} key={index} />
-              );
-            })}
-          </View>
-        </Animated.View>
+    <>
+      <SignInRequiredBottomSheet
+        isVisible={showBottomSheet}
+        onClose={() => setShowBottomSheet(false)}
+        navigation={props.navigation}
+      />
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" translucent />
         <View
           style={{
-            width: '100%',
-            backgroundColor: colors.white,
-            // backgroundColor: 'red',
-            paddingTop: normalizeY(14),
-            paddingHorizontal: normalizeX(24),
+            ...styles.header,
+            paddingTop: top + normalizeY(isAndroid ? 12 : 4),
           }}>
-          <Typography
-            variant="h3"
-            color={colors.deepgrey}
-            textAlign="center"
-            fontWeight={600}>
-            {product.name}
-          </Typography>
-          <Typography variant="sm" color={colors.deepgrey} textAlign="center">
-            {product.description}
-          </Typography>
-          {sections.map(({component, name}, index) => {
-            const isActive = activeSectionIndexes.includes(index);
-            return (
-              <View key={index} style={styles.section}>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.sizeGuide}
-                  onPress={() => {
-                    if (isActive) {
-                      setActiveSectionIndexes(prevValues =>
-                        prevValues.filter(value => value !== index),
-                      );
-                    } else {
-                      setActiveSectionIndexes([...activeSectionIndexes, index]);
-                    }
-                  }}>
-                  <Typography variant="sm" color={colors.deepgrey}>
-                    {name.toUpperCase()}
-                  </Typography>
-                  <ChevronRightIcon
-                    width={normalizeY(18)}
-                    height={normalizeY(18)}
-                    color={colors.deepgrey}
-                    style={{
-                      transform: [{rotate: isActive ? '-90deg' : '90deg'}],
-                    }}
-                  />
-                </TouchableOpacity>
-                {isActive && <>{component}</>}
-              </View>
-            );
-          })}
-          {/* 
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.backButton}
+            onPress={props.navigation.goBack}>
+            <ArrowRightIcon
+              width={normalizeY(22)}
+              height={normalizeY(22)}
+              color={colors.white}
+              style={{
+                transform: [{rotate: '180deg'}],
+              }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.backButton}
+            onPress={() => {
+              if (!authentication.isAuthenticated) {
+                setShowBottomSheet(true);
+                return;
+              }
+              dispatch(favouritesActions.updateFavourites({product}));
+              dispatch(favouritesAsyncActions.updateFavourites(product.id));
+            }}>
+            {isItemInFavourites ? (
+              <HeartFilledIcon
+                width={normalizeY(18)}
+                height={normalizeY(18)}
+                color={colors.error}
+              />
+            ) : (
+              <HeartIcon
+                width={normalizeY(18)}
+                height={normalizeY(18)}
+                color={colors.white}
+              />
+            )}
+          </TouchableOpacity>
+        </View>
+        <Animated.ScrollView
+          contentContainerStyle={{
+            paddingBottom: (bottom || normalizeY(12)) + normalizeY(120),
+            paddingTop: top,
+          }}
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {
+              useNativeDriver: true,
+            },
+          )}>
+          <Animated.View
+            style={{
+              width: '100%',
+              transform: [
+                {
+                  translateY: scrollY.interpolate({
+                    inputRange: [0, screenheight * 0.6],
+                    outputRange: [0, screenheight * 0.45],
+                    extrapolate: 'clamp',
+                  }),
+                },
+              ],
+            }}>
+            <Animated.ScrollView
+              scrollEventThrottle={16}
+              onScroll={Animated.event(
+                [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                {
+                  useNativeDriver: true,
+                },
+              )}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}>
+              {product.images.map(uri => (
+                <CachedImage key={uri} source={{uri}} style={styles.image} />
+              ))}
+            </Animated.ScrollView>
+            <View style={styles.pagination}>
+              {product.images.map((_, index) => {
+                const {opacity} = animate(index);
+                return (
+                  <Animated.View style={{...styles.dot, opacity}} key={index} />
+                );
+              })}
+            </View>
+          </Animated.View>
+          <View
+            style={{
+              width: '100%',
+              backgroundColor: colors.white,
+              // backgroundColor: 'red',
+              paddingTop: normalizeY(14),
+              paddingHorizontal: normalizeX(24),
+            }}>
+            <Typography
+              variant="h3"
+              color={colors.deepgrey}
+              textAlign="center"
+              fontWeight={600}>
+              {product.name}
+            </Typography>
+            <Typography variant="sm" color={colors.deepgrey} textAlign="center">
+              {product.description}
+            </Typography>
+            {sections.map(({component, name}, index) => {
+              const isActive = activeSectionIndexes.includes(index);
+              return (
+                <View key={index} style={styles.section}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.sizeGuide}
+                    onPress={() => {
+                      if (isActive) {
+                        setActiveSectionIndexes(prevValues =>
+                          prevValues.filter(value => value !== index),
+                        );
+                      } else {
+                        setActiveSectionIndexes([
+                          ...activeSectionIndexes,
+                          index,
+                        ]);
+                      }
+                    }}>
+                    <Typography variant="sm" color={colors.deepgrey}>
+                      {name.toUpperCase()}
+                    </Typography>
+                    <ChevronRightIcon
+                      width={normalizeY(18)}
+                      height={normalizeY(18)}
+                      color={colors.deepgrey}
+                      style={{
+                        transform: [{rotate: isActive ? '-90deg' : '90deg'}],
+                      }}
+                    />
+                  </TouchableOpacity>
+                  {isActive && <>{component}</>}
+                </View>
+              );
+            })}
+            {/* 
           {Array(10)
             .fill('9')
             .map((_, index) => (
@@ -530,70 +534,71 @@ const ProductScreen = (props: Props) => {
                 }}
               />
             ))} */}
-        </View>
-      </Animated.ScrollView>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        onPress={() => {
-          if (isItemInCart) {
-            dispatch(cartActions.removeProduct({productId: product.id}));
-          } else {
-            dispatch(
-              cartActions.addProduct({
-                product: {
-                  ...product,
-                  count: quantity,
-                  total: product.price * quantity,
-                  size: selectedSize,
-                },
-              }),
-            );
-          }
-        }}
-        style={{
-          ...styles.cartButton,
-          bottom: bottom || normalizeY(24),
-          backgroundColor: isItemInCart ? colors.error : colors.deepgrey,
-        }}>
-        {isItemInCart ? (
-          <TrashIcon
-            width={normalizeY(24)}
-            height={normalizeY(24)}
-            color={colors.white}
-          />
-        ) : (
-          <BagIcon
-            width={normalizeY(24)}
-            height={normalizeY(24)}
-            color={colors.white}
-          />
-        )}
-      </TouchableOpacity>
-      <View
-        style={{
-          ...styles.footer,
-          height: (bottom || normalizeY(12)) + normalizeY(120),
-          // backgroundColor: 'red',
-        }}
-        pointerEvents="none">
-        <LinearGradient
-          style={{
-            width: '100%',
-            height: normalizeY(40),
+          </View>
+        </Animated.ScrollView>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => {
+            if (isItemInCart) {
+              dispatch(cartActions.removeProduct({productId: product.id}));
+            } else {
+              dispatch(
+                cartActions.addProduct({
+                  product: {
+                    ...product,
+                    count: quantity,
+                    total: product.price * quantity,
+                    size: selectedSize,
+                  },
+                }),
+              );
+            }
           }}
-          colors={[
-            'rgba(255, 255, 255, 0)',
-            'rgba(255, 255, 255, 1)',
-          ]}></LinearGradient>
-        <View style={styles.footerContent}>
-          <Typography
-            variant="h3"
-            fontWeight={500}>{`${cedi} ${product.price.toFixed(
-            2,
-          )}`}</Typography>
+          style={{
+            ...styles.cartButton,
+            bottom: bottom || normalizeY(24),
+            backgroundColor: isItemInCart ? colors.error : colors.deepgrey,
+          }}>
+          {isItemInCart ? (
+            <TrashIcon
+              width={normalizeY(24)}
+              height={normalizeY(24)}
+              color={colors.white}
+            />
+          ) : (
+            <BagIcon
+              width={normalizeY(24)}
+              height={normalizeY(24)}
+              color={colors.white}
+            />
+          )}
+        </TouchableOpacity>
+        <View
+          style={{
+            ...styles.footer,
+            height: (bottom || normalizeY(12)) + normalizeY(120),
+            // backgroundColor: 'red',
+          }}
+          pointerEvents="none">
+          <LinearGradient
+            style={{
+              width: '100%',
+              height: normalizeY(40),
+            }}
+            colors={[
+              'rgba(255, 255, 255, 0)',
+              'rgba(255, 255, 255, 1)',
+            ]}></LinearGradient>
+          <View style={styles.footerContent}>
+            <Typography
+              variant="h3"
+              fontWeight={500}>{`${cedi} ${product.price.toFixed(
+              2,
+            )}`}</Typography>
+          </View>
         </View>
       </View>
-    </View>
+    </>
   );
 };
 

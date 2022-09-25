@@ -15,8 +15,8 @@ import Typography from '../Typography';
 const styles = StyleSheet.create({
   roundedContainer: {
     width: screenwidth - normalizeX(48),
-    height: normalizeY(60),
-    borderRadius: normalizeY(60 / 2),
+    height: normalizeY(54),
+    borderRadius: normalizeY(54 / 2),
     backgroundColor: colors.deepgrey,
     alignItems: 'center',
     justifyContent: 'center',

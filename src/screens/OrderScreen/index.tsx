@@ -4,8 +4,7 @@ import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {RootStackParams} from '../../../types';
 import AppBar from '../../components/AppBar';
-import BottomSheet from '../../components/BottomSheet';
-import Button from '../../components/Button';
+import FloatingBottomSheet from '../../components/FloatingBottomSheet';
 import Typography from '../../components/Typography';
 import {cedi, isAndroid, screenheight} from '../../constants';
 import colors from '../../constants/colors';
@@ -292,12 +291,12 @@ const OrderScreen = (props: Props) => {
 
   return (
     <>
-      <BottomSheet
+      <FloatingBottomSheet
         isOpen
         snapPoints={[normalizeY(140), screenheight * 0.7]}
         onClose={() => {}}>
         {content}
-      </BottomSheet>
+      </FloatingBottomSheet>
       <AppBar
         title="Order"
         subTitle={`#${formatOrderNumber(order.orderNumber, 4)}`}

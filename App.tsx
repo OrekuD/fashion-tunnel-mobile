@@ -30,8 +30,10 @@ import OrderScreen from './src/screens/OrderScreen';
 import WishlistScreen from './src/screens/WishlistScreen';
 import ProfilePictureScreen from './src/screens/ProfilePictureScreen';
 import SearchScreen from './src/screens/SearchScreen';
-import FloatingBottomTabbar from './src/components/FloatingBottomTabbar';
 import BottomTabbar from './src/components/BottomTabbar';
+import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
+import EnterCodeScreen from './src/screens/EnterCodeScreen';
+import ResetPasswordScreen from './src/screens/ResetPasswordScreen';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();
@@ -99,6 +101,15 @@ const RootStackNavigation = () => {
       <Stack.Screen name="OrderScreen" component={OrderScreen} />
       <Stack.Screen name="OrdersScreen" component={OrdersScreen} />
       <Stack.Screen name="EditAddressScreen" component={EditAddressScreen} />
+      <Stack.Screen name="EnterCodeScreen" component={EnterCodeScreen} />
+      <Stack.Screen
+        name="ResetPasswordScreen"
+        component={ResetPasswordScreen}
+      />
+      <Stack.Screen
+        name="ForgotPasswordScreen"
+        component={ForgotPasswordScreen}
+      />
       <Stack.Screen
         name="AddNewAddressScreen"
         component={AddNewAddressScreen}

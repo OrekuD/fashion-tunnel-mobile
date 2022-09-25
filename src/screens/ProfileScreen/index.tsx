@@ -117,7 +117,8 @@ const ProfileScreen = (props: Props) => {
           variant="h1"
           color={colors.deepgrey}
           style={{marginBottom: normalizeY(12)}}>
-          Sign in to view your details and previous orders
+          Sign into your account to view your account details and previous
+          orders
         </Typography>
         <View style={styles.row}>
           <Button

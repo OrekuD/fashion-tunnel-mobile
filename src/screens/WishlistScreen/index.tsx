@@ -141,7 +141,7 @@ const WishlistScreen = (props: Props) => {
           ) : (
             <View
               style={{
-                paddingTop: normalizeY(120),
+                paddingTop: normalizeY(190),
                 paddingHorizontal: normalizeX(24),
               }}>
               <Typography

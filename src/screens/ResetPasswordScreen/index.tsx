@@ -23,7 +23,9 @@ import authenticationAsyncActions from '../../store/actions/authentication.actio
 import {useSelectState} from '../../store/selectors';
 import RequestManager from '../../store/request-manager';
 import BackButton from '../../components/BackButton';
-import userAddressAsyncActions from '../../store/actions/userAddress.action';
+import ResetPasswordRequest from '../../network/requests/ResetPasswordRequest';
+import forgotPasswordAsyncActions from '../../store/actions/forgotPassword.action';
+import {CommonActions} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,15 +42,19 @@ const styles = StyleSheet.create({
   },
 });
 
-interface Props extends StackScreenProps<RootStackParams, 'SignInScreen'> {}
+interface Props
+  extends StackScreenProps<RootStackParams, 'ResetPasswordScreen'> {}
 
-const SignInScreen = (props: Props) => {
-  const [email, setEmail] = React.useState('');
-  const [emailError, setEmailError] = React.useState('');
+const ResetPasswordScreen = (props: Props) => {
+  const [passwordError, setPasswordError] = React.useState('');
+  const [codeError, setCodeError] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(true);
+  const [showPassword, setShowPassword] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(false);
   const {top} = useSafeAreaInsets();
+  const {forgotPassword} = useSelectState();
 
   const dispatch = useDispatch();
   const {request} = useSelectState();
@@ -60,45 +66,57 @@ const SignInScreen = (props: Props) => {
     }
     const RM = new RequestManager(request, dispatch);
 
-    if (RM.isFulfilled(authenticationAsyncActions.signin.typePrefix)) {
-      RM.consume(authenticationAsyncActions.signin.typePrefix);
-      dispatch(userAddressAsyncActions.index());
+    if (RM.isFulfilled(forgotPasswordAsyncActions.resetPassword.typePrefix)) {
+      RM.consume(forgotPasswordAsyncActions.resetPassword.typePrefix);
       setIsLoading(false);
-      if (props.navigation.canGoBack()) {
-        props.navigation.goBack();
-      } else {
-        props.navigation.navigate('MainScreen');
-      }
+      props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: 'MainScreen',
+              state: {
+                routes: [
+                  {
+                    name: 'ProfileScreen',
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+      );
       return;
     }
 
-    if (RM.isRejected(authenticationAsyncActions.signin.typePrefix)) {
-      RM.consume(authenticationAsyncActions.signin.typePrefix);
+    if (RM.isRejected(forgotPasswordAsyncActions.resetPassword.typePrefix)) {
+      RM.consume(forgotPasswordAsyncActions.resetPassword.typePrefix);
       setIsLoading(false);
-      setEmailError('Your credentials are invalid');
+      setCodeError('Your code is invalid');
       return;
     }
   }, [updatedAt, request.updatedAt]);
 
   const canProceed = React.useMemo(() => {
-    if (emailError.trim().length > 0) {
-      return false;
-    }
-    return !isAnyEmpty([email, password]);
-  }, [email, password, emailError]);
+    return !isAnyEmpty([confirmPassword, password]);
+  }, [confirmPassword, password]);
 
   const handleSubmit = () => {
     if (!canProceed || isLoading) {
       return;
     }
+    if (password !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
     setIsLoading(true);
 
-    const payload: SignInRequest = {
-      email: email.trim().toLowerCase(),
-      password: password.trim(),
-      deviceType: isAndroid ? DeviceTypes.ANDROID : DeviceTypes.IOS,
+    const payload: ResetPasswordRequest = {
+      code: forgotPassword.code,
+      email: forgotPassword.email,
+      password: password,
     };
-    dispatch(authenticationAsyncActions.signin(payload));
+    dispatch(forgotPasswordAsyncActions.resetPassword(payload));
   };
 
   return (
@@ -124,46 +142,61 @@ const SignInScreen = (props: Props) => {
               fontWeight={600}
               textAlign="center"
               style={{marginBottom: normalizeY(24)}}>
-              Welcome back
+              Reset your password
             </Typography>
-            <TextField
-              name="E-mail"
-              textInputProps={{
-                placeholder: 'Enter your e-mail',
-                keyboardType: 'email-address',
-                value: email,
-                onChangeText: text => {
-                  setEmail(text);
-                  setEmailError('');
-                },
-                autoCapitalize: 'none',
-              }}
-              rightIcon={
-                <MailIcon
-                  width={normalizeY(24)}
-                  height={normalizeY(24)}
-                  color={colors.grey}
-                />
-              }
-              error={emailError}
-            />
             <TextField
               name="Password"
               textInputProps={{
                 placeholder: 'Enter your password',
-                secureTextEntry: !showPassword,
                 value: password,
                 onChangeText: text => {
                   setPassword(text);
-                  setEmailError('');
+                  setPasswordError('');
                 },
                 autoCapitalize: 'none',
+                secureTextEntry: showPassword,
               }}
               rightIcon={
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  onPress={() => setShowPassword(!showPassword)}>
-                  {!showPassword ? (
+                  onPress={() => setShowPassword(prevValue => !prevValue)}>
+                  {showPassword ? (
+                    <EyeCancelIcon
+                      width={normalizeY(24)}
+                      height={normalizeY(24)}
+                      color={colors.grey}
+                    />
+                  ) : (
+                    <EyeIcon
+                      width={normalizeY(24)}
+                      height={normalizeY(24)}
+                      color={colors.grey}
+                    />
+                  )}
+                </TouchableOpacity>
+              }
+              error={passwordError}
+            />
+
+            <TextField
+              name="Confirm password"
+              textInputProps={{
+                placeholder: 'Enter password confirmation',
+                value: confirmPassword,
+                onChangeText: text => {
+                  setConfirmPassword(text);
+                  setPasswordError('');
+                },
+                autoCapitalize: 'none',
+                secureTextEntry: showConfirmPassword,
+              }}
+              rightIcon={
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={() =>
+                    setShowConfirmPassword(prevValue => !prevValue)
+                  }>
+                  {showConfirmPassword ? (
                     <EyeCancelIcon
                       width={normalizeY(24)}
                       height={normalizeY(24)}
@@ -179,39 +212,19 @@ const SignInScreen = (props: Props) => {
                 </TouchableOpacity>
               }
             />
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={{marginBottom: normalizeY(16)}}
-              onPress={() => props.navigation.navigate('ForgotPasswordScreen')}>
-              <Typography
-                variant="sm"
-                color={colors.primary}
-                textAlign="center">
-                Forgot Password?
+            {codeError.length > 0 && (
+              <Typography variant="sm" color={colors.error}>
+                {codeError}
               </Typography>
-            </TouchableOpacity>
+            )}
             <Button
-              label="Sign in"
+              label="Submit"
               variant="rounded"
               onPress={handleSubmit}
               isDisabled={isLoading || !canProceed}
               isLoading={isLoading}
+              style={{marginTop: normalizeY(16)}}
             />
-            <View style={styles.row}>
-              <Typography variant="sm" color={colors.black} textAlign="center">
-                Don't have an account?{' '}
-              </Typography>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => props.navigation.replace('SignUpScreen')}>
-                <Typography
-                  variant="sm"
-                  color={colors.primary}
-                  textAlign="center">
-                  Create one
-                </Typography>
-              </TouchableOpacity>
-            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -219,4 +232,4 @@ const SignInScreen = (props: Props) => {
   );
 };
 
-export default SignInScreen;
+export default ResetPasswordScreen;

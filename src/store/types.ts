@@ -27,6 +27,11 @@ export interface SearchState {
   query: string;
 }
 
+export interface ForgotPasswordState {
+  code: string;
+  email: string;
+}
+
 export interface UserAddressState {
   list: Array<UserAddress>;
   activeAddressId: string;
