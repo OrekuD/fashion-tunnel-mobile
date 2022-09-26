@@ -35,11 +35,10 @@ interface Props {
 }
 
 const CodeNotReceivedBottomSheet = (props: Props) => {
-  const {forgotPassword} = useSelectState();
+  const {forgotPassword, request} = useSelectState();
   const [isLoading, setIsLoading] = React.useState(false);
 
   const dispatch = useDispatch();
-  const {request} = useSelectState();
   const [updatedAt] = React.useState(request.updatedAt);
 
   React.useEffect(() => {
