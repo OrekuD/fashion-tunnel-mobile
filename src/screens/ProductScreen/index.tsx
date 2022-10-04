@@ -13,6 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
 import {RootStackParams} from '../../../types';
+import AppBar from '../../components/AppBar';
 import CachedImage from '../../components/CachedImage';
 import {
   ArrowRightIcon,
@@ -258,7 +259,9 @@ const ProductScreen = (props: Props) => {
             activeOpacity={0.8}
             style={styles.sizeGuide}
             onPress={() =>
-              props.navigation.navigate('SizeGuideScreen', {productId: ''})
+              props.navigation.navigate('SizeGuideScreen', {
+                productId: product?.id || '',
+              })
             }>
             <Typography variant="sm">View size guide</Typography>
             <ChevronRightIcon
@@ -351,7 +354,7 @@ const ProductScreen = (props: Props) => {
     },
   ];
 
-  if (!product)
+  if (isLoading)
     return (
       <View
         style={{
@@ -362,6 +365,25 @@ const ProductScreen = (props: Props) => {
         }}>
         <ActivityIndicator size="small" color={colors.deepgrey} />
       </View>
+    );
+
+  if (!product)
+    return (
+      <>
+        <AppBar title="Product" />
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: colors.white,
+            paddingBottom: normalizeY(140),
+          }}>
+          <Typography variant="sm" color={colors.deepgrey} textAlign="center">
+            Product not found
+          </Typography>
+        </View>
+      </>
     );
 
   return (
