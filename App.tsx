@@ -34,6 +34,7 @@ import BottomTabbar from './src/components/BottomTabbar';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import EnterCodeScreen from './src/screens/EnterCodeScreen';
 import ResetPasswordScreen from './src/screens/ResetPasswordScreen';
+import {REACT_APP_API_URL} from '@env';
 
 const Stack = createStackNavigator<RootStackParams>();
 const BottomTab = createBottomTabNavigator<BottomTabsParams>();
@@ -55,10 +56,11 @@ const BottomTabNavigation = () => {
 };
 
 const RootStackNavigation = () => {
-  const {authentication, ui} = useSelectState();
   const dispatch = useDispatch();
+  const {ui} = useSelectState();
 
   React.useEffect(() => {
+    // console.log({REACT_APP_API_URL});
     const launch = async () => {
       API.client.interceptors.response.use(
         (response: AxiosResponse<any>): AxiosResponse<any> => response,
@@ -92,6 +94,7 @@ const RootStackNavigation = () => {
         headerShown: false,
       }}
       initialRouteName={ui.isFirstLaunch ? 'OnboardingScreen' : 'MainScreen'}>
+      {/* <Stack.Screen name="OnboardingScreen" component={OnboardingScreen} /> */}
       <Stack.Screen name="MainScreen" component={BottomTabNavigation} />
       <Stack.Screen name="CartScreen" component={CartScreen} />
       <Stack.Screen name="ProductScreen" component={ProductScreen} />

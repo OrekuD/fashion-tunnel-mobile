@@ -216,7 +216,10 @@ const OnboardingScreen = (props: Props) => {
       <View
         style={{
           ...styles.slideIndexIndicator,
-          bottom: bottom + (isAndroid ? normalizeY(120) : normalizeY(90)),
+          bottom:
+            bottom +
+            (isAndroid ? normalizeY(120) : normalizeY(90)) +
+            (slideIndex === 2 ? normalizeY(54) : 0),
           width: screenwidth,
         }}>
         {slides.map((_, index) => {
@@ -296,6 +299,23 @@ const OnboardingScreen = (props: Props) => {
           />
         )}
       </TouchableOpacity>
+      {slideIndex === 2 && (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            ...styles.button,
+            bottom: (bottom || normalizeY(24)) + normalizeY(70),
+            zIndex: 4,
+            backgroundColor: colors.white,
+            borderWidth: 1,
+            borderColor: colors.deepgrey,
+          }}
+          onPress={() => props.navigation.navigate('MainScreen')}>
+          <Typography variant="sm" color={colors.deepgrey}>
+            Go straight to shopping
+          </Typography>
+        </TouchableOpacity>
+      )}
       <Animated.ScrollView
         horizontal
         ref={sliderRef}
@@ -326,7 +346,7 @@ const OnboardingScreen = (props: Props) => {
                   color={colors.deepgrey}
                   textAlign="center"
                   style={{
-                    marginTop: normalizeY(72),
+                    marginTop: normalizeY(54),
                   }}>
                   {title}
                 </Typography>
@@ -335,7 +355,7 @@ const OnboardingScreen = (props: Props) => {
                   color={colors.deepgrey}
                   textAlign="center"
                   style={{
-                    marginTop: normalizeY(14),
+                    marginTop: normalizeY(10),
                     width: '95%',
                     alignSelf: 'center',
                   }}>

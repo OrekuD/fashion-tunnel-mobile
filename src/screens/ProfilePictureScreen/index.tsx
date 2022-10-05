@@ -97,12 +97,20 @@ const ProfilePictureScreen = (props: Props) => {
       RM.consume(userAsyncActions.updateProfilePicture.typePrefix);
       setIsLoading(false);
       setProfileImage(undefined);
+      Alert.alert(
+        'Profile picture',
+        'You have successfully updated your profile picture',
+      );
       return;
     }
 
     if (RM.isRejected(userAsyncActions.updateProfilePicture.typePrefix)) {
       RM.consume(userAsyncActions.updateProfilePicture.typePrefix);
       setIsLoading(false);
+      Alert.alert(
+        'Profile Picture',
+        'There was an issue updating your profile picture',
+      );
       return;
     }
   }, [updatedAt, request.updatedAt]);
@@ -159,13 +167,20 @@ const ProfilePictureScreen = (props: Props) => {
         </Typography>
         <View style={styles.profilePictureContainer}>
           <CachedImage
-            source={{
-              uri: profileImage
-                ? profileImage.uri
-                : user?.profilePicture
-                ? user.profilePicture
-                : avatar,
-            }}
+            // source={ {
+            //   uri: profileImage
+            //     ? profileImage.uri
+            //     : user?.profilePicture
+            //     ? user.profilePicture
+            //     : avatar,
+            // }}
+            source={
+              profileImage || user?.profilePicture
+                ? {
+                    uri: profileImage?.uri || user.profilePicture,
+                  }
+                : avatar
+            }
             style={styles.profilePicture}
           />
           <TouchableOpacity

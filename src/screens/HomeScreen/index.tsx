@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
     height: normalizeY(48),
     borderRadius: normalizeY(48 / 2),
     // marginLeft: normalizeX(16),
-    marginLeft: 'auto',
   },
   card: {
     width: screenwidth * 0.3,
@@ -76,7 +75,7 @@ interface Props extends StackScreenProps<RootStackParams, 'MainScreen'> {}
 
 const HomeScreen = (props: Props) => {
   const {top} = useSafeAreaInsets();
-  const {products, request, user, cart} = useSelectState();
+  const {products, request, user, cart, authentication} = useSelectState();
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -127,23 +126,36 @@ const HomeScreen = (props: Props) => {
       <ScrollView
         contentContainerStyle={{
           // paddingHorizontal: normalizeX(24),
-          paddingBottom: normalizeY(200),
+          paddingBottom: normalizeY(150),
         }}
         style={{backgroundColor: colors.white}}>
         <View style={{paddingHorizontal: normalizeX(24)}}>
           <View style={styles.header}>
             <Logo scale={2} color={colors.deepgrey} />
-            <CachedImage
-              source={
-                user?.profilePicture
-                  ? {
-                      // uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-                      uri: user.profilePicture,
-                    }
-                  : avatar
-              }
-              style={styles.profileImage}
-            />
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={{
+                marginLeft: 'auto',
+              }}
+              onPress={() =>
+                props.navigation.navigate(
+                  authentication.isAuthenticated
+                    ? 'ProfilePictureScreen'
+                    : 'SignInScreen',
+                )
+              }>
+              <CachedImage
+                source={
+                  user?.profilePicture
+                    ? {
+                        // uri: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bW9kZWx8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
+                        uri: user.profilePicture,
+                      }
+                    : avatar
+                }
+                style={styles.profileImage}
+              />
+            </TouchableOpacity>
           </View>
           <View style={{...styles.row, marginBottom: normalizeY(12)}}>
             <View style={{flex: 1, marginRight: normalizeX(12)}}>
